@@ -1,3 +1,7 @@
+@font-face{
+    font-family: yekan;
+    src: url(/static/Yekan.woff);
+}
 *{
     font-family: yekan;
 }
@@ -30,7 +34,7 @@ input{
     filter: brightness(95%);
 }
 .cat-header {
-    background: rgb(181, 181, 181);
+    background: rgb(220, 220, 220);
     cursor: context-menu;
     z-index: 6;
 }
@@ -139,8 +143,9 @@ input{
     cursor: pointer;
     font-size: 1rem;
 }
-.container-fontpage{
+.cards-container{
     position: relative;
+    overflow: auto;
 }
 .icons i {
     padding: 0.5rem 0.5rem;

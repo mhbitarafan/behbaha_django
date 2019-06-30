@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="container-fontpage px-2 px-lg-5">
+    <div class="cards-container px-2 px-lg-5" :style="cards_container_height">
         <transition name="slide">
             <div v-if="product_type[0]" class="product-type">
                 <a href="#" @click="shw_products_f()">لبنیات</a>
@@ -59,114 +59,22 @@
         </transition>
         <transition name="slide">
             <div v-if="product_type[4]" class="product-type">
-                <a href="#">لوازم دیجیتال</a>
+                <a href="#" @click="shw_products_f()">لوازم دیجیتال</a>
             </div>
         </transition>
         <transition name="slide">
             <div v-if="product_type[5]" class="product-type">
-                <a href="#">لوازم خانگی</a>
+                <a href="#" @click="shw_products_f()">لوازم خانگی</a>
             </div>
         </transition>
 
         <div v-if="shw_products" class="product-cards my-3">
-            <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
-                <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
-                <div class="card-box-price px-3 w-100 text-right">
-                    {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
-                <div class="card-box-img">
-                    <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
-                </div>
-                <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
-                    {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
-                </div>
-                <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
-                    <div class="mb-2"></div>
-                    <div class="progress">
-                        <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                            {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
-                    <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
-                    <div class="card-box-price px-3 w-100 text-right">
-                        {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
-                    <div class="card-box-img">
-                        <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
-                    </div>
-                    <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
-                        {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
-                    </div>
-                    <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
-                        <div class="mb-2"></div>
-                        <div class="progress">
-                            <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
-                        <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
-                        <div class="card-box-price px-3 w-100 text-right">
-                            {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
-                        <div class="card-box-img">
-                            <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
-                        </div>
-                        <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
-                            {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
-                        </div>
-                        <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
-                            <div class="mb-2"></div>
-                            <div class="progress">
-                                <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                    {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
-                            <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
-                            <div class="card-box-price px-3 w-100 text-right">
-                                {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
-                            <div class="card-box-img">
-                                <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
-                            </div>
-                            <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
-                                {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
-                            </div>
-                            <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
-                                <div class="mb-2"></div>
-                                <div class="progress">
-                                    <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                        {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
-                                <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
-                                <div class="card-box-price px-3 w-100 text-right">
-                                    {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
-                                <div class="card-box-img">
-                                    <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
-                                </div>
-                                <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
-                                    {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
-                                </div>
-                                <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
-                                    <div class="mb-2"></div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                            {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
-                                    </div>
-                                </div>
-                            </div>
+                {% for i in i|rjust:14 %}
+                <product-card></product-card>
+                {% endfor %}
         </div>
     </div>
-    <div v-if="shw_overlay" class="overlay" @mouseover="hide_product_type()"></div>
+    <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
     <div v-if="shw_overlay2" class="overlay" @click="hide_overlay2()" @mouseover="hide_product_type()"></div>
     <transition name="fade">
     <div v-if="sh_details_box" class="product-details-box d-flex flex-row-reverse" @mouseover="hide_product_type()">
