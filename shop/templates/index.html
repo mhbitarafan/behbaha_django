@@ -1,10 +1,199 @@
 {% extends 'base.html' %}
-{% block title %}فروشگاه{% endblock title %}
+{% block title %}خرید جمعی و ارزان{% endblock title %}
 {% block content %}
-<div class="container-fluid">
-    <div class="row m-0 p-0 bg-secondary"></div>
-    <div class="container">
-        
+<div id="app" class="container-fluid p-0">
+    <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
+        <div class="d-flex">
+            <span class="text-dark h3 m-0 mt-2"><a class="text-danger" href="">BEHBAHA</a></span>
+        </div>
+        <div class="search position-relative col-8 d-flex">
+            <div class="position-relative w-100 d-flex">
+                <input autofocus type="search" placeholder="جستجو ..." name="s" id="search"
+                    class="border px-4 py-2 w-100 h-100">
+                <input type="button" value="جستجو" class="bg-warning border search-btn px-3 h-100">
+            </div>
+        </div>
+        <div class="icons d-flex">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-shopping-cart"></i>
+        </div>
     </div>
+    <div class="d-flex cat-header justify-content-center p-0 py-3">
+
+        <div v-if="shw_use_period" class="cat-header-item row justify-content-center align-items-center m-0">
+            <span class="h5 mr-1 mb-0">دوره مصرف</span>
+            <div class="cat-buttons mr-2 d-flex">
+                <a href="#" @mouseover="shw_product_type(0)">دائم</a>
+                <a href="#" @mouseover="shw_product_type(1)">کوتاه مدت</a>
+                <a href="#" @mouseover="shw_product_type(2)">میان مدت</a>
+                <a href="#" @mouseover="shw_product_type(3)">بلند مدت</a>
+                <a href="#" @mouseover="shw_product_type(4)">طولانی مدت</a>
+                <a href="#" @mouseover="shw_product_type(5)">عمری</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fontpage px-2 px-lg-5">
+        <transition name="slide">
+            <div v-if="product_type[0]" class="product-type">
+                <a href="#" @click="shw_products_f()">لبنیات</a>
+                <a href="#" @click="shw_products_f()">سبزیجات</a>
+            </div>
+        </transition>
+        <transition name="slide">
+            <div v-if="product_type[1]" class="product-type">
+                <a href="#" @click="shw_products_f()">سیب زمینی و پیاز</a>
+                <a href="#" @click="shw_products_f()">میوه جات</a>
+            </div>
+        </transition>
+        <transition name="slide">
+            <div v-if="product_type[2]" class="product-type">
+                <a href="#" @click="shw_products_f()">روغن</a>
+            </div>
+        </transition>
+        <transition name="slide">
+            <div v-if="product_type[3]" class="product-type">
+                <a href="#" @click="shw_products_f()">لوازم التحریر</a>
+                <a href="#" @click="shw_products_f()">لوازم جانبی خودرو</a>
+            </div>
+        </transition>
+        <transition name="slide">
+            <div v-if="product_type[4]" class="product-type">
+                <a href="#">لوازم دیجیتال</a>
+            </div>
+        </transition>
+        <transition name="slide">
+            <div v-if="product_type[5]" class="product-type">
+                <a href="#">لوازم خانگی</a>
+            </div>
+        </transition>
+
+        <div v-if="shw_products" class="product-cards my-3">
+            <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
+                <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
+                <div class="card-box-price px-3 w-100 text-right">
+                    {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
+                <div class="card-box-img">
+                    <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                </div>
+                <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
+                    {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                </div>
+                <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
+                    <div class="mb-2"></div>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
+                    <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
+                    <div class="card-box-price px-3 w-100 text-right">
+                        {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
+                    <div class="card-box-img">
+                        <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                    </div>
+                    <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
+                        {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                    </div>
+                    <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
+                        <div class="mb-2"></div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
+                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
+                        <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
+                        <div class="card-box-price px-3 w-100 text-right">
+                            {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
+                        <div class="card-box-img">
+                            <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                        </div>
+                        <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
+                            {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                        </div>
+                        <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
+                            <div class="mb-2"></div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
+                            <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
+                            <div class="card-box-price px-3 w-100 text-right">
+                                {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
+                            <div class="card-box-img">
+                                <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                            </div>
+                            <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
+                                {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                            </div>
+                            <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
+                                <div class="mb-2"></div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-box d-flex flex-column align-items-center" @click="shw_product_details()">
+                                <h1 class="card-box-title p-2 px-3 w-100 text-right">میوه</h1>
+                                <div class="card-box-price px-3 w-100 text-right">
+                                    {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>
+                                <div class="card-box-img">
+                                    <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                                </div>
+                                <div class="card-box-footer pt-2 px-2 w-100 text-right">زمان شروع:
+                                    {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                                </div>
+                                <div class="card-box-footer p-2 w-100 text-right">میزان سفارشات :
+                                    <div class="mb-2"></div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
+                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                            {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                                    </div>
+                                </div>
+                            </div>
+        </div>
+    </div>
+    <div v-if="shw_overlay" class="overlay" @mouseover="hide_product_type()"></div>
+    <div v-if="shw_overlay2" class="overlay" @click="hide_overlay2()" @mouseover="hide_product_type()"></div>
+    <transition name="fade">
+    <div v-if="sh_details_box" class="product-details-box d-flex flex-row-reverse" @mouseover="hide_product_type()">
+        <div class="dt-img"><img
+                src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png"></div>
+        <div class="d-flex flex-column w-100">
+                <div class="dt-title text-dark w-100 text-right px-3 py-2">میوه</div>     
+                <div class="dt-price px-3 w-100 text-right">
+                        {% verbatim %}{{toPersianNum("2000 - 3000")}}{% endverbatim %} تومان</div>   
+                <div class="card-box-footer pt-2 px-3 w-100 text-right">زمان شروع:
+                        {% verbatim %}{{toPersianNum("9 تیر 98")}}{% endverbatim %}
+                    </div>
+                    <div class="card-box-footer py-2 px-3 w-100 text-right">میزان سفارشات :
+                        <div class="mb-2"></div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning px-3" role="progressbar" style="width: 25%;"
+                                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                {% verbatim %}{{toPersianNum("30 از 200 کیلوگرم")}}{% endverbatim %}</div>
+                        </div>
+                    </div>  
+                    <div id="order-amount" class="w-100 p-2 px-3 d-flex flex-row text-right">
+                            <input type="number" min="1" class="p-2 dt-order-amount col" placeholder="میزان سفارش شما"> 
+                            <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2()">افزودن به سبد خرید</a> 
+                    </div>          
+        </div>     
+          
+    </div>
+</transition>
 </div>
 {% endblock content %}

@@ -1,0 +1,189 @@
+*{
+    font-family: yekan;
+}
+#app{
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+input{
+    outline: 0!important;
+}
+#header{
+    background: white;
+    z-index: 5;
+}
+#header a{
+    text-decoration: none;
+}
+#search{
+    border-radius: 0 30px 30px 0;
+}
+.search-btn {
+    padding: 0.4rem 0.7rem;
+    border: 0;
+    border-right: 1px solid gainsboro;
+    background: white;
+    border-radius: 30px 0 0 30px;
+}
+.search-btn:hover {
+    filter: brightness(95%);
+}
+.cat-header {
+    background: rgb(181, 181, 181);
+    cursor: context-menu;
+    z-index: 6;
+}
+.cat-btn{
+    cursor: pointer;
+    background: rgb(233, 233, 233);
+    font-size: 1.2rem;
+}
+.adv-search{
+    cursor: pointer;
+    padding: 0.4rem 1rem;
+    background: white;
+    margin: 0.6rem 0;
+    border: 1px solid #b1b1b1;
+}
+.cat-buttons a{
+    margin: 0 0.5rem;
+    color: black;
+    text-decoration: none;
+    background: white;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+.cat-buttons a:hover{
+    background: rgb(195, 195, 195);
+}
+.product-type{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgb(255, 255, 255);
+    text-align: right;
+    border-top: 1px solid rgb(177, 177, 177);
+    box-shadow: 0 4px 2px -2px #6f6f6f;
+    z-index: 5;
+}
+.product-type a{
+    color: black;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0 1rem;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+.product-type a:hover{
+    background: rgb(235, 235, 235);
+}
+.overlay {
+    background: rgba(50,50,50,0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 4;
+}
+.product-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(230px,1fr));
+    grid-gap: 15px;
+}
+.card-box {
+    cursor: context-menu;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.card-box:hover{
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25), 0 8px 10px rgba(0,0,0,0.22);
+}
+.card-box:hover .card-box-price, .card-box:hover .card-box-footer{
+    color: black;
+}
+.card-box:hover .card-box-img{
+    filter: contrast(110%) brightness(102%);
+}
+.card-box-img img{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.card-box-title{
+    color: #d20000;
+    font-size: 1.3rem;
+}
+.card-box-price{
+    color: rgb(99, 99, 99);
+    font-size: 1.16rem;
+}
+.card-box-footer{
+    color: rgb(99, 99, 99);
+    font-size: 1rem;
+}
+.progress-bar {
+    color: rgb(12, 12, 12);
+}
+.progress {
+    font-size: 1rem;
+    height: 1.6rem;
+}
+.shopping-basket{
+    cursor: pointer;
+    font-size: 1rem;
+}
+.container-fontpage{
+    position: relative;
+}
+.icons i {
+    padding: 0.5rem 0.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.slide-enter-active, .slide-leave-active {
+    transition: all .4s;
+  }
+  .slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }  
+.product-details-box {
+    position: fixed;
+    width: 60%;
+    height: 300px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    cursor: context-menu;
+    z-index: 4;
+}  
+.dt-title {
+    font-size:1.3rem;
+}
+.dt-price{
+    color: rgb(241, 0, 0);
+    font-size: 1.16rem;
+}
+.dt-order-amount {
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+}
+
+
+
