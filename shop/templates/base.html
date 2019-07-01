@@ -10,13 +10,15 @@
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     {% comment %} <link href="http://cdn.font-store.ir/yekan.css" rel="stylesheet"> {% endcomment %}
     <script src="https://kit.fontawesome.com/336dae4105.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js" integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script> {% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.1/vuex.min.js" integrity="sha256-6XOQHnT/ZYiLvi5YuVz7lX1dsxa7GFoQb1Q9mRdtHWU=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 </head>
 <body>
 {% block content %}{% endblock content %}
+<script src="{% static 'js/cities.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
