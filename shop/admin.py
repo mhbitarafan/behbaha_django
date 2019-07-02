@@ -16,7 +16,7 @@ class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
     fields = ('title', 'prices', 'max_order', 'deliver_at', 'description', 'featured_image', 'images',)
     search_fields = ["title"]
     raw_id_fields = ()
-    autocomplete_fields = ("prices", 'images',)
+    autocomplete_fields = ("prices", 'gallery',)
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':'40'})},
         models.CharField: {'widget': TextInput(attrs={'size':'40'})},
