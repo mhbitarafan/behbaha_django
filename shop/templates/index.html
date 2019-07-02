@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
+{% load jalali_tags %}
+{% load shop_tags %}
 {% block title %}خرید جمعی و ارزان{% endblock title %}
 {% block content %}
 <div id="app" class="container-fluid p-0">
     <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
         <div class="d-flex">
-            <span class="text-dark h3 m-0 mt-2"><a class="text-danger" href="">BEHBAHA</a></span>
+            <span class="text-dark h3 m-0 mt-2"><a class="text-danger" href="">با صرفه تر</a></span>
         </div>
         <div class="search position-relative col-8 d-flex">
             <div class="position-relative w-100 d-flex">
@@ -69,7 +71,7 @@
     </div>
 
     <div class="cards-container d-flex flex-row-reverse">
-        <div class="products-filters-sidebar col d-flex flex-column text-right p-2 px-2">
+        <div class="products-filters-sidebar col-2 d-flex flex-column text-right p-2 px-2">
             <div class="d-flex flex-column">
                     <div class="d-flex flex-column border-bottom">
                     <div>شهر</div>
@@ -97,9 +99,14 @@
         <div class="d-flex flex-column col-10 align-items-center p-0" style="direction: ltr;overflow: auto;"
             :style="cards_container_height">
             <div v-if="shw_products" class="product-cards w-100 p-3">
-                {% for i in i|rjust:14 %}
-                <product-card></product-card>
-                {% endfor %}
+            {% for product in products %}
+          
+                <product-card title="{{product.title}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
+                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
+                ></product-card>
+                <product-details-box title="{{product.title}}" desc="{{product.description}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
+                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{{price.order_range}}{% endfor %}{% endwith %}"></product-details-box>
+            {% endfor %}
             </div>
             <div class="page-numbers-container row py-2 text-center justify-content-center w-100">
                 <a href="#" class="text-danger">{% verbatim %}{{toPersianNum("1")}}{% endverbatim %}</a>
@@ -108,6 +115,5 @@
         </div>
     </div>
     <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
-    <product-details-box></product-details-box>
 </div>
 {% endblock content %}

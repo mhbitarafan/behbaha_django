@@ -1,0 +1,10 @@
+@font-face{
+    font-family: yekan;
+    src: url(/static/Yekan.woff);
+}
+* {
+    font-family : "yekan"!important
+   }
+/* body {
+    zoom: 1.1;
+}    */

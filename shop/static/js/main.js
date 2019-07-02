@@ -44,34 +44,51 @@ shw_product_details(){
   store.commit('overlay2_t');
   store.commit('details_box_t');
 },
+min_price(prices){
+  p = prices.split(',');
+  p = p.filter(Number) ;
+  return Math.min(...p).toLocaleString();
+},
+max_price(prices){
+  p = prices.split(',');
+  p = p.filter(Number) ;
+  return Math.max(...p).toLocaleString();
+},
+prices_table(prices){
+  p = prices.split(',');
 
+},
+order_number(max_order){
+  return Math.floor((Math.random() * max_order) + 1);
+},
   },
+  props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image',],
   template: `
               <div class="card-box my-2 d-flex flex-column align-items-center" @click="shw_product_details()">
-                <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right">میوه</h1>
+                <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right">{{title}}</h1>
                 <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت سفارش گیری:
-                    {{toPersianNum("3 روز دیگر")}}
+                    {{toPersianNum(time_remaining)}}
                 </div>
                 <div class="card-box-footer pb-2 px-3 w-100 text-right">زمان تحویل:
-                {{toPersianNum("20 تیر")}}
+                    {{toPersianNum(delivery_date)}}
                 </div>
                 <div class="card-box-img">
-                    <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+                    <img :src="image">
                 </div>
                 <div class="card-box-price pt-1 px-2 w-100 text-right">
                 <div class="d-flex justify-content-between">
-                <div>{{toPersianNum("از 3000 تومان")}}</div>
-                <div>{{toPersianNum("تا 2000 تومان")}}</div>
+                <div>از {{toPersianNum(max_price(prices))}} تومان</div>
+                <div>تا {{toPersianNum(min_price(prices))}} تومان</div>
               </div>    
                 </div>
                 <div class="card-box-footer p-2 w-100 text-right">
                     <div class="progress">
-                        <div class="progress-bar bg-warning px-2" role="progressbar" style="width: 25%;"
-                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (order_number(max_order)/max_order)*100 + '%'}"
+                            aria-valuenow="30" aria-valuemin="0" :aria-valuemax="max_order"></div>
                     </div>
                     <div class="d-flex justify-content-between p-1">
-                    <div>{{toPersianNum("30 سفارش از")}}</div>
-                    <div>{{toPersianNum("200 سفارش")}}</div>
+                    <div>{{toPersianNum(order_number(max_order))}} سفارش از</div>
+                    <div>{{toPersianNum(max_order)}} سفارش</div>
                   </div>
                 </div>
             </div>
@@ -107,14 +124,32 @@ Vue.component('product-details-box', {
     }
     vm.shw_overlay = false;
   },
+  min_price(prices){
+    p = prices.split(',');
+    p = p.filter(Number) ;
+    return Math.min(...p).toLocaleString();
+  },
+  max_price(prices){
+    p = prices.split(',');
+    p = p.filter(Number) ;
+    return Math.max(...p).toLocaleString();
+  },
+  prices_table(prices){
+    p = prices.split(',');
+  
+  },
+  order_number(max_order){
+    return Math.floor((Math.random() * max_order) + 1);
+  },
 },
+props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc'],
   template: `
-  <div>
+  <div v-if="store.state.sh_details_box">
   <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2()" @mouseover="hide_product_type()"></div>
   <transition name="fade">
   <div v-if="store.state.sh_details_box" class="product-details-box p-1 d-flex flex-row-reverse" @mouseover="hide_product_type()">
-      <div class="dt-img d-flex flex-column">
-        <img src="http://cdn.24.co.za/files/Cms/General/d/7635/c9cb6d629e5e40318d2b120ed91c9b2b.png">
+      <div class="dt-img d-flex flex-column col-12 col-lg-5">
+        <img :src="image">
         <div class="d-flex mt-2 px-3 justify-content-center">
           <div>
             <span class="fa fa-star checked"></span>
@@ -126,35 +161,35 @@ Vue.component('product-details-box', {
           <div class="mr-2">{{toPersianNum("میانگین 35560 رای")}}</div>
         </div>
       </div>
-      <div class="d-flex flex-column w-100">
-              <div class="dt-title text-dark w-100 text-right px-3 py-2">میوه</div>     
+      <div class="d-flex flex-column w-100 col-12 col-lg-7">
+              <div class="dt-title text-dark w-100 text-right px-3 py-2">{{title}}</div>     
               <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت سفارش گیری:
-              {{toPersianNum("3 روز دیگر")}}
-          </div>
+                  {{toPersianNum(time_remaining)}}
+              </div>
           <div class="card-box-footer pb-2 px-3 w-100 text-right">زمان تحویل:
-          {{toPersianNum("20 تیر")}}
+              {{toPersianNum(delivery_date)}}
           </div>
                   <div class="card-box-footer py-2 px-3 w-100 text-right">
                   <div class="card-box-price p-1 w-100 text-right">
                   <div class="d-flex justify-content-between">
-                  <div>{{toPersianNum("از 3000 تومان")}}</div>
-                  <div>{{toPersianNum("تا 2000 تومان")}}</div>
+                  <div>از {{toPersianNum(max_price(prices))}} تومان</div>
+                  <div>تا {{toPersianNum(min_price(prices))}} تومان</div>
                 </div>    
                   </div>
-                      <div class="progress">
-                          <div class="progress-bar bg-warning px-3" role="progressbar" style="width: 25%;"
-                              aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
+                  <div class="progress">
+                      <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (order_number(max_order)/max_order)*100 + '%'}"
+                      aria-valuenow="30" aria-valuemin="0" :aria-valuemax="max_order"></div>
+                  </div>
                       <div class="d-flex justify-content-between p-1">
-                        <div>{{toPersianNum("30 سفارش از")}}</div>
-                        <div>{{toPersianNum("200 سفارش")}}</div>
+                        <div>{{toPersianNum(order_number(max_order))}} سفارش از</div>
+                        <div>{{toPersianNum(max_order)}} سفارش</div>
                       </div>
                   </div>  
                   <div class="p-2">
                   <table class="table price-range">
                   <thead>
                     <tr>
-                      <th>#</th>
+                      <th></th>
                       <th>رنج سفارش</th>
                       <th>قیمت</th>
                     </tr>
@@ -183,7 +218,7 @@ Vue.component('product-details-box', {
                           <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2()">افزودن به سبد خرید</a> 
                   </div>      
                   <div class="p-2 text-justify">
-                  میوه ها و سبزیجات بخش ضروری رژیم غذایی یک فرد است، چون خطر مجموعه‌ای از بیماری‌های مزمن مانند بیماری قلبی و سرطان را کاهش می‌دهند، حتی می‌توانند وزن‌تان را در سطحی سلامت حفظ کنند. در واقع، رهنمود رژیم غذایی برای امریکایی‌ها که در ۲۰۱۶ چاپ شد، توصیه می‌کند نصف وعده‌ی غذایی‌تان باید از میوه و سبزیجات درست شده‌باشد. ضمنا میوه و سبزیجات مختلفی وجود دارد که فواید مختلفی برای آنها ذکر شده‌است و به نظر می‌رسد برای شرایط مختلف سلامتی مفید هستند. 
+                   {{desc}}
                   </div>
       </div>     
         
