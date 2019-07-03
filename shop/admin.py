@@ -13,10 +13,10 @@ from django.db import models
 class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
     # inlines = (MyInlines1, )s
     list_display = ('title',)
-    fields = ('title', 'prices', 'max_order', 'deliver_at', 'description', 'featured_image', 'gallery',)
+    fields = ('title', 'prices', 'max_order', 'deliver_at', 'description', 'featured_image',)
     search_fields = ["title"]
     raw_id_fields = ()
-    autocomplete_fields = ("prices", 'gallery',)
+    autocomplete_fields = ("prices",)
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size':'40'})},
         models.CharField: {'widget': TextInput(attrs={'size':'40'})},

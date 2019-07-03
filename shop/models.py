@@ -31,15 +31,7 @@ class product(models.Model):
     max_order = models.CharField("سقف سفارش", blank=True, max_length=200)
     deliver_at = models.DateField(null=True,verbose_name="تاریخ تحویل")
     featured_image = models.ImageField(upload_to='images/%Y/%m/%d', null=True, verbose_name="تصویر اصلی")
-<<<<<<< HEAD
-<<<<<<< HEAD
-    gallery = models.ManyToManyField(image, verbose_name="گالری تصاویر", blank=True)
-=======
-    gallery = models.ManyToManyField(image, verbose_name="گالری تصاویر", null=True, blank=True)
->>>>>>> 3bd021eb58152fa760faa67a19759325b3d57218
-=======
-    gallery = models.ManyToManyField(image, verbose_name="گالری تصاویر", null=True, blank=True)
->>>>>>> f7609dcfa6da094ba92b643ff11138f883334324
+    # gallery = models.ManyToManyField(image, verbose_name="گالری تصاویر", blank=True)
     description = models.TextField("توضیحات", blank=True)
     class Meta:
         verbose_name = "محصول"

@@ -96,6 +96,11 @@ order_number(max_order){
 });
 
 Vue.component('product-details-box', {
+  data() {
+    return {
+      order_ranges_arr: [],
+    }
+  },
   methods: {
     toPersianNum( num, dontTrim ) {
       var i = 0,
@@ -124,14 +129,24 @@ Vue.component('product-details-box', {
     }
     vm.shw_overlay = false;
   },
+  get_order_ranges(o){
+    var o_range = o.split(',');
+    o_range.pop();
+    return o_range;
+  },
+  get_prices(p,i){
+    var prices = p.split(',');
+    prices.pop();
+    return parseInt(prices[i]).toLocaleString();
+  },
   min_price(prices){
-    p = prices.split(',');
-    p = p.filter(Number) ;
+    var p = prices.split(',');
+    p.pop() ;
     return Math.min(...p).toLocaleString();
   },
   max_price(prices){
     p = prices.split(',');
-    p = p.filter(Number) ;
+    p.pop();
     return Math.max(...p).toLocaleString();
   },
   prices_table(prices){
@@ -142,7 +157,7 @@ Vue.component('product-details-box', {
     return Math.floor((Math.random() * max_order) + 1);
   },
 },
-props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc'],
+props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges'],
   template: `
   <div v-if="store.state.sh_details_box">
   <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2()" @mouseover="hide_product_type()"></div>
@@ -189,27 +204,15 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                   <table class="table price-range">
                   <thead>
                     <tr>
-                      <th></th>
                       <th>رنج سفارش</th>
                       <th>قیمت</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>{{toPersianNum("1")}}</td>
-                      <td>{{toPersianNum("از 1-5 سفارش")}}</td>
-                      <td>{{toPersianNum("10000 تومان")}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{toPersianNum("2")}}</td>
-                      <td>{{toPersianNum("از 5-15 سفارش")}}</td>
-                      <td>{{toPersianNum("9000 تومان")}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{toPersianNum("3")}}</td>
-                      <td>{{toPersianNum("از 15 سفارش به بالا")}}</td>
-                      <td>{{toPersianNum("8000 تومان")}}</td>
-                    </tr>
+                  <tr v-for="(item, index) in get_order_ranges(order_ranges)" :key="index">
+                      <td>{{toPersianNum(item)}}</td>
+                      <td>{{toPersianNum(get_prices(prices,index))}}</td>
+                  </tr>
                   </tbody>
                 </table>
                 </div>

@@ -105,7 +105,10 @@
                 prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
                 ></product-card>
                 <product-details-box title="{{product.title}}" desc="{{product.description}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
-                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{{price.order_range}}{% endfor %}{% endwith %}"></product-details-box>
+                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
+                order_ranges="{% with  product.prices as prices %}{% for price in prices.all %}{{price.order_range}},{% endfor %}{% endwith %}"
+                ></product-details-box>
+
             {% endfor %}
             </div>
             <div class="page-numbers-container row py-2 text-center justify-content-center w-100">
