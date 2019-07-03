@@ -1,7 +1,7 @@
 const store = new Vuex.Store({
   state: {
     shw_overlay2: false,
-    sh_details_box: false,
+    sh_details_box: [],
   },
   mutations: {
     overlay2_f(state) {
@@ -10,11 +10,11 @@ const store = new Vuex.Store({
     overlay2_t(state) {
       state.shw_overlay2 = true;
     },
-    details_box_f(state) {
-      state.sh_details_box = false;
+    details_box_f(state, i) {
+      Vue.set(state.sh_details_box, i, false);
     },
-    details_box_t(state) {
-      state.sh_details_box = true;
+    details_box_t(state, i) {
+      Vue.set(state.sh_details_box, i, true);
     },
   }
 });
@@ -40,9 +40,9 @@ Vue.component('product-card', {
           res += num.charAt(i);
   return res;
   },
-shw_product_details(){
+shw_product_details(id){
   store.commit('overlay2_t');
-  store.commit('details_box_t');
+  store.commit('details_box_t', id);
 },
 min_price(prices){
   p = prices.split(',');
@@ -62,9 +62,9 @@ order_number(max_order){
   return Math.floor((Math.random() * max_order) + 1);
 },
   },
-  props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image',],
+  props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'pid'],
   template: `
-              <div class="card-box my-2 d-flex flex-column align-items-center" @click="shw_product_details()">
+              <div class="card-box my-2 d-flex flex-column align-items-center" @click="shw_product_details(pid)">
                 <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right">{{title}}</h1>
                 <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت سفارش گیری:
                     {{toPersianNum(time_remaining)}}
@@ -119,9 +119,9 @@ Vue.component('product-details-box', {
           res += num.charAt(i);
   return res;
   },
-    hide_overlay2(){
+    hide_overlay2(id){
       store.commit('overlay2_f');
-      store.commit('details_box_f');
+      store.commit('details_box_f', id);
     },
   hide_product_type(){
     for(var i=0; i < vm.product_type.length; i++){
@@ -157,15 +157,17 @@ Vue.component('product-details-box', {
     return Math.floor((Math.random() * max_order) + 1);
   },
 },
-props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges'],
+props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges', 'pid'],
   template: `
-  <div v-if="store.state.sh_details_box">
-  <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2()" @mouseover="hide_product_type()"></div>
+  <div v-if="store.state.sh_details_box[pid]">
+  <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()">
+    <div class="position-absolute close-btn"><i class="fas fa-times"></i></div>
+  </div>
   <transition name="fade">
-  <div v-if="store.state.sh_details_box" class="product-details-box p-1 d-flex flex-row-reverse" @mouseover="hide_product_type()">
+  <div v-if="store.state.sh_details_box[pid]" class="product-details-box p-1 d-flex flex-row-reverse" @mouseover="hide_product_type()">
       <div class="dt-img d-flex flex-column col-12 col-lg-5">
         <img :src="image">
-        <div class="d-flex mt-2 px-3 justify-content-center">
+        <div class="d-flex mt-2 justify-content-center">
           <div>
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star checked"></span>
@@ -218,7 +220,7 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                 </div>
                   <div id="order-amount" class="w-100 p-2 px-3 d-flex flex-row text-right">
                           <input type="number" min="1" class="p-2 dt-order-amount col" placeholder="میزان سفارش شما"> 
-                          <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2()">افزودن به سبد خرید</a> 
+                          <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2(pid)">افزودن به سبد خرید</a> 
                   </div>      
                   <div class="p-2 text-justify">
                    {{desc}}

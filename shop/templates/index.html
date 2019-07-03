@@ -100,11 +100,11 @@
             :style="cards_container_height">
             <div v-if="shw_products" class="product-cards w-100 p-3">
             {% for product in products %}
-          
-                <product-card title="{{product.title}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
+                
+                <product-card pid="{{forloop.counter0}}" title="{{product.title}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
                 prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
                 ></product-card>
-                <product-details-box title="{{product.title}}" desc="{{product.description}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
+                <product-details-box pid="{{forloop.counter0}}" title="{{product.title}}" desc="{{product.description}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
                 prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
                 order_ranges="{% with  product.prices as prices %}{% for price in prices.all %}{{price.order_range}},{% endfor %}{% endwith %}"
                 ></product-details-box>

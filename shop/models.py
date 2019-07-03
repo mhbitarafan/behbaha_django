@@ -4,7 +4,7 @@ from django.db import models
 
 class price_ranges(models.Model):
     id = models.AutoField(primary_key=True)
-    price = models.IntegerField(verbose_name="قیمت")
+    price = models.CharField(verbose_name="قیمت", max_length=50, blank=True)
     order_range = models.TextField("رنج سفارش")
     class Meta:
         verbose_name = "رنج قیمت"
