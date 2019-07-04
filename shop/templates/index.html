@@ -33,44 +33,43 @@
                 <a href="#" @mouseover="shw_product_type(5)">عمری</a>
             </div>
         </div>
-
-        <!-- sub categories -->
-        <transition name="slide">
-            <div v-if="product_type[0]" class="product-type">
-                <a href="#" @click="shw_products_f()">لبنیات</a>
-                <a href="#" @click="shw_products_f()">سبزیجات</a>
-            </div>
-        </transition>
-        <transition name="slide">
-            <div v-if="product_type[1]" class="product-type">
-                <a href="#" @click="shw_products_f()">سیب زمینی و پیاز</a>
-                <a href="#" @click="shw_products_f()">میوه جات</a>
-            </div>
-        </transition>
-        <transition name="slide">
-            <div v-if="product_type[2]" class="product-type">
-                <a href="#" @click="shw_products_f()">روغن</a>
-            </div>
-        </transition>
-        <transition name="slide">
-            <div v-if="product_type[3]" class="product-type">
-                <a href="#" @click="shw_products_f()">لوازم التحریر</a>
-                <a href="#" @click="shw_products_f()">لوازم جانبی خودرو</a>
-            </div>
-        </transition>
-        <transition name="slide">
-            <div v-if="product_type[4]" class="product-type">
-                <a href="#" @click="shw_products_f()">لوازم دیجیتال</a>
-            </div>
-        </transition>
-        <transition name="slide">
-            <div v-if="product_type[5]" class="product-type">
-                <a href="#" @click="shw_products_f()">لوازم خانگی</a>
-            </div>
-        </transition>
     </div>
 
     <div class="cards-container d-flex flex-row-reverse">
+        <!-- sub categories -->
+        <transition name="slide">
+                <div v-if="product_type[0]" class="product-type">
+                    <a href="#" @click="shw_products_f()">لبنیات</a>
+                    <a href="#" @click="shw_products_f()">سبزیجات</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[1]" class="product-type">
+                    <a href="#" @click="shw_products_f()">سیب زمینی و پیاز</a>
+                    <a href="#" @click="shw_products_f()">میوه جات</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[2]" class="product-type">
+                    <a href="#" @click="shw_products_f()">روغن</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[3]" class="product-type">
+                    <a href="#" @click="shw_products_f()">لوازم التحریر</a>
+                    <a href="#" @click="shw_products_f()">لوازم جانبی خودرو</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[4]" class="product-type">
+                    <a href="#" @click="shw_products_f()">لوازم دیجیتال</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[5]" class="product-type">
+                    <a href="#" @click="shw_products_f()">لوازم خانگی</a>
+                </div>
+            </transition>
         <div class="products-filters-sidebar col-2 d-flex flex-column text-right p-2 px-2">
             <div class="d-flex flex-column">
                     <div class="d-flex flex-column border-bottom">
@@ -102,11 +101,11 @@
             {% for product in products %}
                 
                 <product-card pid="{{forloop.counter0}}" title="{{product.title}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
-                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
+                prices="{{product.prices}}"
                 ></product-card>
                 <product-details-box pid="{{forloop.counter0}}" title="{{product.title}}" desc="{{product.description}}" image="media/{{product.featured_image}}" max_order="{{product.max_order}}" delivery_date="{{product.deliver_at|to_jalali}}" time_remaining="{{product.deliver_at|calc_time_remining}}"
-                prices="{% with  product.prices as prices %}{% for price in prices.all %}{{price.price}},{% endfor %}{% endwith %}"
-                order_ranges="{% with  product.prices as prices %}{% for price in prices.all %}{{price.order_range}},{% endfor %}{% endwith %}"
+                prices="{{product.prices}}"
+                order_ranges="{{product.order_ranges}}"
                 ></product-details-box>
 
             {% endfor %}

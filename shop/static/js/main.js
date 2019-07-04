@@ -45,18 +45,12 @@ shw_product_details(id){
   store.commit('details_box_t', id);
 },
 min_price(prices){
-  p = prices.split(',');
-  p = p.filter(Number) ;
+  p = prices.split('\n');
   return Math.min(...p).toLocaleString();
 },
 max_price(prices){
-  p = prices.split(',');
-  p = p.filter(Number) ;
+  p = prices.split('\n');
   return Math.max(...p).toLocaleString();
-},
-prices_table(prices){
-  p = prices.split(',');
-
 },
 order_number(max_order){
   return Math.floor((Math.random() * max_order) + 1);
@@ -130,28 +124,20 @@ Vue.component('product-details-box', {
     vm.shw_overlay = false;
   },
   get_order_ranges(o){
-    var o_range = o.split(',');
-    o_range.pop();
+    var o_range = o.split('\n');
     return o_range;
   },
   get_prices(p,i){
-    var prices = p.split(',');
-    prices.pop();
+    var prices = p.split('\n');
     return parseInt(prices[i]).toLocaleString();
   },
   min_price(prices){
-    var p = prices.split(',');
-    p.pop() ;
+    var p = prices.split('\n');
     return Math.min(...p).toLocaleString();
   },
   max_price(prices){
-    p = prices.split(',');
-    p.pop();
+    p = prices.split('\n');
     return Math.max(...p).toLocaleString();
-  },
-  prices_table(prices){
-    p = prices.split(',');
-  
   },
   order_number(max_order){
     return Math.floor((Math.random() * max_order) + 1);
@@ -219,7 +205,7 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                 </table>
                 </div>
                   <div id="order-amount" class="w-100 p-2 px-3 d-flex flex-row text-right">
-                          <input type="number" min="1" class="p-2 dt-order-amount col" placeholder="میزان سفارش شما"> 
+                          <input type="number" min="1" class="p-2 dt-order-amount col col-lg-5" placeholder="میزان سفارش شما"> 
                           <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2(pid)">افزودن به سبد خرید</a> 
                   </div>      
                   <div class="p-2 text-justify">
@@ -281,7 +267,7 @@ var vm = new Vue({
       get_header_height(){
         this.header_height = document.querySelector('#header').offsetHeight;
         this.cat_header_height = document.querySelector('.cat-header').offsetHeight;
-        var a = "calc(100vh - " + (this.cat_header_height + this.header_height) + "px)";
+        var a = "calc(100vh - " + (this.cat_header_height + this.header_height + 10) + "px)";
         this.cards_container_height = {height: a};
       },
       shw_product_type(index){
