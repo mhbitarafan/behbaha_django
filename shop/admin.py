@@ -6,9 +6,23 @@ from django.forms import TextInput, Textarea
 from django.db import models
 # Register your models here.
 
-# class MyInlines1(TabularInlineJalaliMixin, admin.TabularInline):
-#     model = SecendModel
+@admin.register(image)
+class imageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'url',)
+    fields = ('title', 'url',)
+    search_fields = ['title']
 
+@admin.register(order)
+class orderAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'amount')
+    fields = ('title', 'price', 'amount', 'description')
+    search_fields = ['title']
+
+@admin.register(cart)
+class cartAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'amount')
+    fields = ('title', 'price', 'amount')
+    search_fields = ['title']
 
 @admin.register(product)
 class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
@@ -30,9 +44,3 @@ class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
         css = {
                 'all': ('css/admin-extra.css',)
         }
-
-@admin.register(image)
-class imageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url',)
-    fields = ('title', 'url',)
-    search_fields = ['title']

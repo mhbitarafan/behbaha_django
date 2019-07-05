@@ -133,5 +133,9 @@
         </div>
     </div>
     <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
+    <!-- messages -->
+    <transition name="fade">
+        <div v-if="shw_alert" class="alert alert-success fixed-bottom text-right w-25 m-2 p-2 rounded">به سبد خرید افزوده شد</div>
+    </transition>
 </div>
 {% endblock content %}

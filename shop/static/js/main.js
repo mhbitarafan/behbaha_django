@@ -165,10 +165,11 @@ return res;
   },
   add_to_cart(title,o_amount){
     this.$http.get('/cart?title='+title+'&order_amount='+o_amount).then(response => {
-
       // get body data
-      console.log(response.body);
-  
+      vm.shw_alert = true;
+      setTimeout(() => {
+        vm.shw_alert = false;
+      }, 4000);
     }, response => {
       // error callback
     });
@@ -264,6 +265,7 @@ var vm = new Vue({
         min_price: '',
         max_price: '',
         cards_container_height: '',
+        shw_alert: false,
     },
     mounted:function(){
       document.querySelector('#search').focus();
