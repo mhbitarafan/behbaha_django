@@ -93,6 +93,7 @@ Vue.component('product-details-box', {
   data() {
     return {
       order_ranges_arr: [],
+      order_amount: '',
     }
   },
   methods: {
@@ -113,6 +114,23 @@ Vue.component('product-details-box', {
           res += num.charAt(i);
   return res;
   },
+  toEnglishNum( num, dontTrim ) {
+    var i = 0,
+    dontTrim = dontTrim || false,
+    num = dontTrim ? num.toString() : num.toString().trim(),
+    len = num.length,
+    res = '',
+    pos,
+    persianNumbers = typeof persianNumber == 'undefined' ?
+        ['0', '1', '2', '۳', '۴', '۵', '۶', '۷', '۸', '۹'] :
+        persianNumbers;
+for (; i < len; i++)
+    if (( pos = persianNumbers[num.charAt(i)] ))
+        res += pos;
+    else
+        res += num.charAt(i);
+return res;
+},
     hide_overlay2(id){
       store.commit('overlay2_f');
       store.commit('details_box_f', id);
@@ -141,6 +159,19 @@ Vue.component('product-details-box', {
   },
   order_number(max_order){
     return Math.floor((Math.random() * max_order) + 1);
+  },
+  get_order_amount(o){
+    this.order_amount = this.toPersianNum(o);
+  },
+  add_to_cart(title,o_amount){
+    this.$http.get('/cart?title='+title+'&order_amount='+o_amount).then(response => {
+
+      // get body data
+      console.log(response.body);
+  
+    }, response => {
+      // error callback
+    });
   },
 },
 props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges', 'pid'],
@@ -205,8 +236,8 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                 </table>
                 </div>
                   <div id="order-amount" class="w-100 p-2 px-3 d-flex flex-row text-right">
-                          <input type="number" min="1" class="p-2 dt-order-amount col col-lg-5" placeholder="میزان سفارش شما"> 
-                          <a name="" id="" class="btn btn-success mr-2" href="#" role="button" @click="hide_overlay2(pid)">افزودن به سبد خرید</a> 
+                          <input type="text" min="1" class="p-2 dt-order-amount col col-lg-5" v-model="order_amount" @input="get_order_amount(order_amount)" placeholder="میزان سفارش شما" name="order_amount" id="order_amount"> 
+                          <input type="button" name="" id="" class="btn btn-success mr-2" :href="'/cart?title='+title+'&order_amount='+order_amount" :disabled="order_amount===''" role="button" @click="add_to_cart(title,order_amount);hide_overlay2(pid)" value="افزودن به سبد خرید"></input> 
                   </div>      
                   <div class="p-2 text-justify">
                    {{desc}}
