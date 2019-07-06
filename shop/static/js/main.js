@@ -257,7 +257,8 @@ var vm = new Vue({
         shw_use_period: true,
         shw_overlay: false,
         product_type: [],
-        shw_products: true,
+        shw_products: false,
+        shw_api_results: false,
         shw_overlay2: false,
         header_height: 0,
         cat_header_height: 0,
@@ -266,6 +267,8 @@ var vm = new Vue({
         max_price: '',
         cards_container_height: '',
         shw_alert: false,
+        search_term: '',
+        products: [],
     },
     mounted:function(){
       document.querySelector('#search').focus();
@@ -316,12 +319,54 @@ var vm = new Vue({
         }
         this.shw_overlay = false;
       },
-      shw_products_f(){
-        this.shw_products = true;
+      shw_products_by_category(t){
+        this.shw_products = false;
         this.shw_overlay = false;
         store.commit('details_box_f');
         store.commit('overlay2_f');
         this.hide_product_type();
+        this.$http.get('/products/?category='+t).then(response => {
+          // get body data
+          this.shw_api_results = true;
+          const body = response.body;
+          const results = body.results;
+          if(body.count != 0) {
+            for (let i = 0; i < results.length; i++) {
+              this.$set(this.products, i, results[i])
+            }
+          } else {
+            this.shw_api_results = false;
+            this.shw_products = true;
+            this.products = [];
+          }
+
+        }, response => {
+          console.log('error');
+          // error callback
+        });
+      },
+      search(s){
+        this.products = [];
+        this.shw_products = false;
+        this.$http.get('/products/?search='+s).then(response => {
+          // get body data
+          this.shw_api_results = true;
+          const body = response.body;
+          const results = body.results;
+          if(body.count != 0) {
+            for (let i = 0; i < results.length; i++) {
+              this.$set(this.products, i, results[i])
+            }
+          } else {
+            this.shw_api_results = false;
+            this.shw_products = true;
+            this.products = [];
+          }
+
+        }, response => {
+          console.log('error');
+          // error callback
+        });
       },
     },
   });

@@ -31,7 +31,7 @@ input{
 }
 #header{
     background: white;
-    z-index: 5;
+    z-index: 6;
 }
 #header a{
     text-decoration: none;
@@ -86,24 +86,30 @@ input{
     top: 0;
     right: 0;
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 4rem;
     background: rgb(255, 255, 255);
     text-align: right;
     border-top: 1px solid rgb(177, 177, 177);
     box-shadow: 0 4px 2px -2px #6f6f6f;
     z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+    direction: rtl;
+    grid-gap: 1rem;
 }
 .product-type a{
     color: black;
+    background: #e8e8e8;
     font-size: 1.2rem;
+    text-align: center; 
     margin: 0;
-    padding: 0 1rem;
+    padding: 0.6rem;
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 30px;
     transition: all 0.3s;
 }
 .product-type a:hover{
-    background: rgb(235, 235, 235);
+    filter: brightness(90%);
 }
 .overlay {
     background: rgba(50,50,50,0.5);
