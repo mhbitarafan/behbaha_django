@@ -1,6 +1,8 @@
 from django import template
 from datetime import date, timedelta
 import jdatetime
+from persiantools import digits
+import locale
 
 register = template.Library()
 
@@ -15,3 +17,13 @@ def calc_time_remining(value):
         return "%s %s" % (t_remaining, "روز دیگر")
     else:
         return "%s" % ("به اتمام رسید")
+
+@register.filter
+def to_fa(value):
+    num = int(value)
+    a = f'{num:,}'
+    return digits.en_to_fa(a)
+
+@register.filter
+def multiply(value, arg):
+    return value * arg

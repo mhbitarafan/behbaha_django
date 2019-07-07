@@ -40,5 +40,5 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = product
-        fields = ('title', 'prices', 'order_ranges', 'max_order', 'featured_image', 'deliver_at', 'categories', 'description', 'remaining_time')
+        fields = ('title', 'prices', 'order_ranges', 'max_order', 'ordered_num', 'featured_image', 'deliver_at', 'categories', 'description', 'remaining_time')
         read_only_fields = ('remaining_time',)

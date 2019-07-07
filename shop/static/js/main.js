@@ -23,7 +23,7 @@ Vue.component('v-select', VueSelect.VueSelect);
 
 Vue.component('product-card', {
   methods: {
-    toPersianNum( num, dontTrim ) {
+    to_fa( num, dontTrim ) {
       var i = 0,
       dontTrim = dontTrim || false,
       num = dontTrim ? num.toString() : num.toString().trim(),
@@ -52,37 +52,34 @@ max_price(prices){
   p = prices.split('\n');
   return Math.max(...p).toLocaleString();
 },
-order_number(max_order){
-  return Math.floor((Math.random() * max_order) + 1);
-},
   },
-  props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'pid'],
+  props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'pid', 'ordered_num'],
   template: `
               <div class="card-box my-2 d-flex flex-column align-items-center" @click="shw_product_details(pid)">
-                <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right">{{title}}</h1>
+                <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right" :title="title">{{title}}</h1>
                 <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت سفارش گیری:
-                    {{toPersianNum(time_remaining)}}
+                    {{to_fa(time_remaining)}}
                 </div>
                 <div class="card-box-footer pb-2 px-3 w-100 text-right">زمان تحویل:
-                    {{toPersianNum(delivery_date)}}
+                    {{to_fa(delivery_date)}}
                 </div>
                 <div class="card-box-img">
                     <img :src="image">
                 </div>
                 <div class="card-box-price pt-1 px-2 w-100 text-right">
                 <div class="d-flex justify-content-between">
-                <div>از {{toPersianNum(max_price(prices))}} تومان</div>
-                <div>تا {{toPersianNum(min_price(prices))}} تومان</div>
+                <div>از {{to_fa(max_price(prices))}} تومان</div>
+                <div>تا {{to_fa(min_price(prices))}} تومان</div>
               </div>    
                 </div>
                 <div class="card-box-footer p-2 w-100 text-right">
                     <div class="progress">
-                        <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (order_number(max_order)/max_order)*100 + '%'}"
+                        <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (ordered_num/max_order)*100 + '%'}"
                             aria-valuenow="30" aria-valuemin="0" :aria-valuemax="max_order"></div>
                     </div>
                     <div class="d-flex justify-content-between p-1">
-                    <div>{{toPersianNum(order_number(max_order))}} سفارش از</div>
-                    <div>{{toPersianNum(max_order)}} سفارش</div>
+                    <div>{{to_fa(ordered_num)}} سفارش از</div>
+                    <div>{{to_fa(max_order)}} سفارش</div>
                   </div>
                 </div>
             </div>
@@ -97,7 +94,7 @@ Vue.component('product-details-box', {
     }
   },
   methods: {
-    toPersianNum( num, dontTrim ) {
+    to_fa( num, dontTrim ) {
       var i = 0,
       dontTrim = dontTrim || false,
       num = dontTrim ? num.toString() : num.toString().trim(),
@@ -157,25 +154,19 @@ return res;
     p = prices.split('\n');
     return Math.max(...p).toLocaleString();
   },
-  order_number(max_order){
-    return Math.floor((Math.random() * max_order) + 1);
-  },
   get_order_amount(o){
-    this.order_amount = this.toPersianNum(o);
+    this.order_amount = this.to_fa(o);
   },
   add_to_cart(title,o_amount){
-    this.$http.get('/cart?title='+title+'&order_amount='+o_amount).then(response => {
-      // get body data
-      vm.shw_alert = true;
-      setTimeout(() => {
-        vm.shw_alert = false;
-      }, 4000);
+    vm.shw_alert = false;
+    this.$http.get('/add_to_cart?title='+title+'&order_amount='+o_amount).then(response => {
+      vm.set_msg("'" + o_amount + ' ' + title + "'" + ' به سبد خرید افزوده شد', 'alert-success');
     }, response => {
       // error callback
     });
   },
 },
-props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges', 'pid'],
+props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges', 'pid', 'ordered_num',],
   template: `
   <div v-if="store.state.sh_details_box[pid]">
   <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()">
@@ -183,7 +174,7 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
   </div>
   <transition name="fade">
   <div v-if="store.state.sh_details_box[pid]" class="product-details-box p-1 d-flex flex-row-reverse" @mouseover="hide_product_type()">
-      <div class="dt-img d-flex flex-column col-12 col-lg-5">
+      <div class="dt-img d-flex flex-column col-5 col-lg-5">
         <img :src="image">
         <div class="d-flex mt-2 justify-content-center">
           <div>
@@ -193,31 +184,31 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
             <span class="fa fa-star"></span>
             <span class="fa fa-star"></span>
           </div>
-          <div class="mr-2">{{toPersianNum("میانگین 35560 رای")}}</div>
+          <div class="mr-2">{{to_fa("میانگین 35560 رای")}}</div>
         </div>
       </div>
       <div class="d-flex flex-column w-100 col-12 col-lg-7">
               <div class="dt-title text-dark w-100 text-right px-3 py-2">{{title}}</div>     
               <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت سفارش گیری:
-                  {{toPersianNum(time_remaining)}}
+                  {{to_fa(time_remaining)}}
               </div>
           <div class="card-box-footer pb-2 px-3 w-100 text-right">زمان تحویل:
-              {{toPersianNum(delivery_date)}}
+              {{to_fa(delivery_date)}}
           </div>
                   <div class="card-box-footer py-2 px-3 w-100 text-right">
                   <div class="card-box-price p-1 w-100 text-right">
                   <div class="d-flex justify-content-between">
-                  <div>از {{toPersianNum(max_price(prices))}} تومان</div>
-                  <div>تا {{toPersianNum(min_price(prices))}} تومان</div>
+                  <div>از {{to_fa(max_price(prices))}} تومان</div>
+                  <div>تا {{to_fa(min_price(prices))}} تومان</div>
                 </div>    
                   </div>
                   <div class="progress">
-                      <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (order_number(max_order)/max_order)*100 + '%'}"
+                      <div class="progress-bar bg-warning px-2" role="progressbar" :style="{width: (ordered_num/max_order)*100 + '%'}"
                       aria-valuenow="30" aria-valuemin="0" :aria-valuemax="max_order"></div>
                   </div>
                       <div class="d-flex justify-content-between p-1">
-                        <div>{{toPersianNum(order_number(max_order))}} سفارش از</div>
-                        <div>{{toPersianNum(max_order)}} سفارش</div>
+                        <div>{{to_fa(ordered_num)}} سفارش از</div>
+                        <div>{{to_fa(max_order)}} سفارش</div>
                       </div>
                   </div>  
                   <div class="p-2">
@@ -230,15 +221,15 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                   </thead>
                   <tbody>
                   <tr v-for="(item, index) in get_order_ranges(order_ranges)" :key="index">
-                      <td>{{toPersianNum(item)}}</td>
-                      <td>{{toPersianNum(get_prices(prices,index))}}</td>
+                      <td>{{to_fa(item)}}</td>
+                      <td>{{to_fa(get_prices(prices,index))}}</td>
                   </tr>
                   </tbody>
                 </table>
                 </div>
                   <div id="order-amount" class="w-100 p-2 px-3 d-flex flex-row text-right">
                           <input type="text" min="1" class="p-2 dt-order-amount col col-lg-5" v-model="order_amount" @input="get_order_amount(order_amount)" placeholder="میزان سفارش شما" name="order_amount" id="order_amount"> 
-                          <input type="button" name="" id="" class="btn btn-success mr-2" :href="'/cart?title='+title+'&order_amount='+order_amount" :disabled="order_amount===''" role="button" @click="add_to_cart(title,order_amount);hide_overlay2(pid)" value="افزودن به سبد خرید"></input> 
+                          <input type="button" name="" id="" class="btn btn-success mr-2" :href="'/cart?title='+title+'&order_amount='+order_amount" :disabled="order_amount===''" role="button" @click="add_to_cart(title,order_amount)" value="افزودن به سبد خرید"></input> 
                   </div>      
                   <div class="p-2 text-justify">
                    {{desc}}
@@ -251,7 +242,37 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
   `
 });
 
+Vue.component('cart-items', {
+  data() {
+    return {
+      a: '',
+    }
+  },
+  mounted() {
+    this.save_cart_data(this.c_data);
+  },
+  methods: {
+    save_cart_data(cart_data){
+      vm.shw_alert = true;
+      // console.log(vm.shw_alert);
+      // var cart_items = cart_data.replace(/'/g, '"');
+      // cart_items = JSON.parse(cart_items);
+      // for (var i = 0; i < cart_items.length; i++){
+      //   vm.cart_amount =['f'];
+      //   // this.$set(vm.cart_amount, i, cart_items[i].amount);
+      //   console.log(vm.cart_amount)
+      // }
+      // console.log(this.cart_amount);
+      // this.cart_data = cart_items;
+    },
+},
+props: ['c_data',],
+  template: ``
+});
+
+
 var vm = new Vue({
+    delimiters: ['[[', ']]'],
     el: '#app',
     data: {
         shw_use_period: true,
@@ -266,9 +287,16 @@ var vm = new Vue({
         min_price: '',
         max_price: '',
         cards_container_height: '',
+        cart_container_height: '',
         shw_alert: false,
         search_term: '',
         products: [],
+        msg_text: '',
+        msg_type: '',
+        cart_data: '',
+        updated_cart_data: '',
+        disabled: true,
+        cart_amount: [],
     },
     mounted:function(){
       document.querySelector('#search').focus();
@@ -276,7 +304,7 @@ var vm = new Vue({
       window.addEventListener("resize", this.get_header_height);
 },
     methods: {
-      toPersianNum( num, dontTrim ) {
+      to_fa( num, dontTrim ) {
         var i = 0,
         dontTrim = dontTrim || false,
         num = dontTrim ? num.toString() : num.toString().trim(),
@@ -295,16 +323,18 @@ var vm = new Vue({
     },
     set_price_filter(p, a){
       if (a == "m" && p != ""){
-        this.min_price = this.toPersianNum(p);
+        this.min_price = this.to_fa(p);
       } else if (a == "h" && p != "") {
-        this.max_price = this.toPersianNum(p);
+        this.max_price = this.to_fa(p);
       }
     },
       get_header_height(){
         this.header_height = document.querySelector('#header').offsetHeight;
         this.cat_header_height = document.querySelector('.cat-header').offsetHeight;
         var a = "calc(100vh - " + (this.cat_header_height + this.header_height + 10) + "px)";
+        var b = "calc(100vh - " + (this.cat_header_height + this.header_height + 40) + "px)";
         this.cards_container_height = {height: a};
+        this.cart_container_height = {height: b};
       },
       shw_product_type(index){
         for(var i=0; i < this.product_type.length; i++){
@@ -319,15 +349,36 @@ var vm = new Vue({
         }
         this.shw_overlay = false;
       },
+      set_msg(txt, type){
+        vm.shw_alert = true;
+        this.msg_text = txt;
+        this.msg_type = type;
+        setTimeout(() => {
+          vm.shw_alert = false;
+        }, 4000);
+      },
+      is_cart_changed(){
+        return true;
+      },
+
+      update_cart() {
+        console.log(this.cart_amount);
+        // var a = c_data.replace(/'/g, '"');
+        // this.updated_cart_data = a;
+        // if(this.updated_cart_data == this.cart_data){
+        //   console.log('true');
+        // }
+      },
       shw_products_by_category(t){
         this.shw_products = false;
         this.shw_overlay = false;
         store.commit('details_box_f');
         store.commit('overlay2_f');
         this.hide_product_type();
-        this.$http.get('/products/?category='+t).then(response => {
+        this.$http.get('/api/products/?category='+t).then(response => {
           // get body data
           this.shw_api_results = true;
+          vm.shw_alert = false;
           const body = response.body;
           const results = body.results;
           if(body.count != 0) {
@@ -348,9 +399,10 @@ var vm = new Vue({
       search(s){
         this.products = [];
         this.shw_products = false;
-        this.$http.get('/products/?search='+s).then(response => {
+        this.$http.get('/api/products/?search='+s).then(response => {
           // get body data
           this.shw_api_results = true;
+          vm.shw_alert = false;
           const body = response.body;
           const results = body.results;
           if(body.count != 0) {
@@ -358,6 +410,7 @@ var vm = new Vue({
               this.$set(this.products, i, results[i])
             }
           } else {
+            this.set_msg("نتیجه ای یافت نشد", 'alert-danger');
             this.shw_api_results = false;
             this.shw_products = true;
             this.products = [];

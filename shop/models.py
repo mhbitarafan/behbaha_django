@@ -27,6 +27,7 @@ class product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
     title = models.CharField("عنوان کالا", max_length=200)
+    title = models.CharField("عنوان کالا", max_length=200)
     prices = models.TextField(verbose_name="رنج قیمت ها", blank=True)
     order_ranges = models.TextField(verbose_name="رنج سفارش", blank=True)
     max_order = models.CharField("سقف سفارش", blank=True, max_length=200)
