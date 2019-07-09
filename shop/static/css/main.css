@@ -71,8 +71,9 @@ input{
     margin: 0.6rem 0;
     border: 1px solid #b1b1b1;
 }
-.cat-buttons a{
+.cat-buttons div{
     margin: 0.5rem;
+    cursor: pointer;
     color: black;
     text-decoration: none;
     background: white;
@@ -81,7 +82,7 @@ input{
     border-radius: 10px;
     transition: all 0.3s;
 }
-.cat-buttons a:hover{
+.cat-buttons div:hover{
     background: rgb(195, 195, 195);
 }
 .product-type{
@@ -271,12 +272,18 @@ text-align:right;
 .cart-table th{
     border-top: 0;
 }
+.cart-amount-input i{
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 0.1rem;
+}
 @media only screen and (min-width: 768px) {
 .msg-box {
     width: 20%;
 }
 .icons{
     display: flex!important;
+    align-items: center;
 }
 .products-filters-sidebar{
     display:flex;

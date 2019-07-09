@@ -6,20 +6,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>بهبها | {% block title %}{% endblock title %}</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <BASE href="http://127.0.0.1:8000/">
+    <link href="{% static 'libraries/bootstrap-4.3.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'libraries/font-awesome/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'libraries/vue/vue-select.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
-    {% comment %} <link href="http://cdn.font-store.ir/yekan.css" rel="stylesheet"> {% endcomment %}
-    <script src="https://kit.fontawesome.com/336dae4105.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js" integrity="sha256-chlNFSVx3TdcQ2Xlw7SvnbLAavAQLO0Y/LBiWX04viY=" crossorigin="anonymous"></script>
-    {% comment %} <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script> {% endcomment %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.1/vuex.min.js" integrity="sha256-6XOQHnT/ZYiLvi5YuVz7lX1dsxa7GFoQb1Q9mRdtHWU=" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/vue-select@latest"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="{% static 'libraries/vue/vue.min.js' %}"></script>
+    <script src="{% static 'libraries/vue/vuex.min.js' %}"></script>
+    <script src="{% static 'libraries/vue/vue-select.js' %}"></script>
+    <script src="{% static 'libraries/vue/vue-resource.js' %}"></script>
+    <script src="{% static 'libraries/js.cookie.min.js' %}"></script>
+    <script src="{% static 'libraries/ifvisible.min.js' %}"></script>
 </head>
 <body>
-{% block content %}{% endblock content %}
+<div id="app" class="container-fluid p-0">
+{% block header %}
+    <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
+        <div class="d-flex">
+            <span class="text-dark h3 m-0 py-1 px-2"><a class="text-danger" href="">با صرفه تر</a></span>
+        </div>
+        <div class="search position-relative col-12 col-sm-8 mt-3 mt-sm-0 p-0 d-flex">
+            <div class="position-relative w-100 d-flex">
+                <input autofocus type="search" v-model="search_term" @input="search(search_term)" placeholder="جستجو ..." name="s" id="search"
+                    class="border px-4 py-2 w-100 h-100">
+                <input type="button" value="جستجو" @click="search(search_term)" class="bg-warning border search-btn px-3 h-100">
+            </div>
+        </div>
+        <div class="icons d-flex">
+            <a href="/cart/" class="text-dark"><i class="fas fa-user-circle" style="font-size:2.15rem;"></i></a>
+            <a href="/cart/" class="text-dark"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+    <div class="d-flex cat-header justify-content-center p-0 py-2">
+        <div v-if="shw_use_period" class="cat-header-item row justify-content-center align-items-center m-0">
+            <span class="h5 my-2">دوره مصرف</span>
+            <div class="cat-buttons my-1 d-flex flex-wrap">
+                <div @click="shw_product_type(0)">دائم</div>
+                <div @click="shw_product_type(1)">کوتاه مدت</div>
+                <div @click="shw_product_type(2)">میان مدت</div>
+                <div @click="shw_product_type(3)">بلند مدت</div>
+                <div @click="shw_product_type(4)">طولانی مدت</div>
+                <div @click="shw_product_type(5)">عمری</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-container d-flex flex-row-reverse">
+        <!-- sub categories -->
+        <transition name="slide">
+                <div v-if="product_type[0]" class="product-type">
+                    <a href="#" @click="shw_products_by_category('لبنیات')">لبنیات</a>
+                    <a href="#" @click="shw_products_by_category('سبزیجات')">سبزیجات</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[1]" class="product-type">
+                    <a href="#" @click="shw_products_by_category('سیب زمینی و پیاز')">سیب زمینی و پیاز</a>
+                    <a href="#" @click="shw_products_by_category('میوه جات')">میوه جات</a>
+                    <a href="#" @click="shw_products_by_category('ماکارانی')">ماکارانی</a>
+                    <a href="#" @click="shw_products_by_category('رب')">رب</a>
+                    <a href="#" @click="shw_products_by_category('خرما')">خرما</a>
+                    <a href="#" @click="shw_products_by_category('گردو')">گردو</a>
+                    <a href="#" @click="shw_products_by_category('زیتون')">زیتون</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[2]" class="product-type">
+                    <a href="#" @click="shw_products_by_category('روغن')">روغن</a>
+                    <a href="#" @click="shw_products_by_category('برنج')">برنج</a>
+                    <a href="#" @click="shw_products_by_category('چای')">چای</a>
+                    <a href="#" @click="shw_products_by_category('قند')">قند</a>
+                    <a href="#" @click="shw_products_by_category('شکر')">شکر</a>
+                    <a href="#" @click="shw_products_by_category('زعفران')">زعفران</a>
+                    <a href="#" @click="shw_products_by_category('آبغوره')">آبغوره</a>
+                    <a href="#" @click="shw_products_by_category('آبلیمو')">آبلیمو</a>
+                    <a href="#" @click="shw_products_by_category('سرکه')">سرکه</a>
+                    <a href="#" @click="shw_products_by_category('دستمال کاغذی')">دستمال کاغذی</a>
+                    <a href="#" @click="shw_products_by_category('پودر لباسشویی')">پودر لباسشویی</a>
+                    <a href="#" @click="shw_products_by_category('صابون')">صابون</a>
+                    <a href="#" @click="shw_products_by_category('مایع ظرفشویی')">مایع ظرفشویی</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[3]" class="product-type">
+                    <a href="#" @click="shw_products_by_category('لوازم التحریر')">لوازم التحریر</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[4]" class="product-type">
+                    <a href="/products/category/لوازم-دیجیتال">لوازم دیجیتال</a>
+                </div>
+            </transition>
+            <transition name="slide">
+                <div v-if="product_type[5]" class="product-type">
+                    <a href="/products/category/لوازم-خانگی">لوازم خانگی</a>
+                </div>
+            </transition>
+{% endblock header %}
+{% block content %}
+{% endblock content %}
+</div>
+    <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
+    <!-- messages -->
+    <transition name="fade">
+        <div v-if="shw_alert" :class="msg_type" class="msg-box alert fixed-bottom text-right m-0 m-lg-2 p-2">[[msg_text]]</div>
+    </transition>
+</div>
 <script src="{% static 'js/cities.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
 </body>

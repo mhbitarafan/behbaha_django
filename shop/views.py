@@ -1,14 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import product, order, cart
+from django.views.decorators.csrf import csrf_exempt
+import json
+from persiantools import digits
 import logging
 logger = logging.getLogger(__name__)
 # Create your views here.
 
+def to_fa(value):
+    num = int(value)
+    a = f'{num:,}'
+    return digits.en_to_fa(a)
+
 def index(request):
-    products = product.objects.all()
-    context = {'products': products,}
-    return render(request, 'index.html', context)
+    # products = product.objects.all()
+    # context = {'products': products,}
+    return render(request, 'index.html')
+
+def product_cat(request, cat):
+    # products = product.objects.filter(category__title=cat)
+    # context = {'products': products, 'cat': cat}
+    return render(request, 'index.html')
 
 def search(request):
     search_term = request.GET['s']
@@ -69,6 +82,7 @@ def cart_process(request):
             cart_instance = cart.objects.create(title=cdata['title'], amount=cdata['order_amount'], price=price, session_id=s_id)
     return HttpResponse(u_data)
 
+@csrf_exempt
 def cart_page(request):
     s_id = request.session.session_key
     cdata = cart.objects.get(session_id=s_id)
@@ -79,8 +93,25 @@ def cart_page(request):
     for i,item in enumerate(c_titles):
         c_data.append({
         "title": c_titles[i],
-        "price": c_prices[i],
-        "price_all": str(int(c_prices[i])*int(c_amounts[i])),
+        "price": to_fa(c_prices[i]),
+        "price_all": to_fa(str(int(c_prices[i])*int(c_amounts[i]))),
         "amount": c_amounts[i],})
     context = {'c_data': c_data}
-    return render(request, 'cart.html', context)
+    if request.method == 'POST':
+        return HttpResponse(json.dumps(c_data))
+    if request.method == 'GET':
+        return render(request, 'cart.html', context)
+
+def cart_update(request):
+    if request.method == 'GET':
+        cart_amounts = request.GET['cart_amounts']
+        cart_amounts = cart_amounts.replace(',', '\n')
+        s_id = request.session.session_key
+        cart_instance = cart.objects.filter(session_id=s_id)
+        if cart_instance.exists():
+            cart_instance = cart.objects.filter(session_id=s_id).update(amount=cart_amounts)
+    return HttpResponse('success')
+
+def account(request):
+    if request.method == 'GET':
+        return render(request, 'cart.html', context)

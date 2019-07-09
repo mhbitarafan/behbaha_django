@@ -3,89 +3,6 @@
 {% load shop_tags %}
 {% block title %}خرید جمعی و ارزان{% endblock title %}
 {% block content %}
-<div id="app" class="container-fluid p-0">
-    <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
-        <div class="d-flex">
-            <span class="text-dark h3 m-0 px-2"><a class="text-danger" href="">با صرفه تر</a></span>
-        </div>
-        <div class="search position-relative col-12 col-sm-8 mt-3 mt-sm-0 p-0 d-flex">
-            <div class="position-relative w-100 d-flex">
-                <input autofocus type="search" v-model="search_term" @input="search(search_term)" placeholder="جستجو ..." name="s" id="search"
-                    class="border px-4 py-2 w-100 h-100">
-                <input type="button" value="جستجو" @click="search(search_term)" class="bg-warning border search-btn px-3 h-100">
-            </div>
-        </div>
-        <div class="icons d-flex">
-            <i class="fas fa-user"></i>
-            <a href="/cart/" class="text-dark"><i class="fas fa-shopping-cart"></i></a>
-        </div>
-    </div>
-    <div class="d-flex cat-header justify-content-center p-0 py-2">
-
-        <div v-if="shw_use_period" class="cat-header-item row justify-content-center align-items-center m-0">
-            <span class="h5 my-2">دوره مصرف</span>
-            <div class="cat-buttons mt-2 d-flex flex-wrap">
-                <a href="#" @mouseover="shw_product_type(0)">دائم</a>
-                <a href="#" @mouseover="shw_product_type(1)">کوتاه مدت</a>
-                <a href="#" @mouseover="shw_product_type(2)">میان مدت</a>
-                <a href="#" @mouseover="shw_product_type(3)">بلند مدت</a>
-                <a href="#" @mouseover="shw_product_type(4)">طولانی مدت</a>
-                <a href="#" @mouseover="shw_product_type(5)">عمری</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="cards-container d-flex flex-row-reverse">
-        <!-- sub categories -->
-        <transition name="slide">
-                <div v-if="product_type[0]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لبنیات')">لبنیات</a>
-                    <a href="#" @click="shw_products_by_category('سبزیجات')">سبزیجات</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[1]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('سیب زمینی و پیاز')">سیب زمینی و پیاز</a>
-                    <a href="#" @click="shw_products_by_category('میوه جات')">میوه جات</a>
-                    <a href="#" @click="shw_products_by_category('ماکارانی')">ماکارانی</a>
-                    <a href="#" @click="shw_products_by_category('رب')">رب</a>
-                    <a href="#" @click="shw_products_by_category('خرما')">خرما</a>
-                    <a href="#" @click="shw_products_by_category('گردو')">گردو</a>
-                    <a href="#" @click="shw_products_by_category('زیتون')">زیتون</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[2]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('روغن')">روغن</a>
-                    <a href="#" @click="shw_products_by_category('برنج')">برنج</a>
-                    <a href="#" @click="shw_products_by_category('چای')">چای</a>
-                    <a href="#" @click="shw_products_by_category('قند')">قند</a>
-                    <a href="#" @click="shw_products_by_category('شکر')">شکر</a>
-                    <a href="#" @click="shw_products_by_category('زعفران')">زعفران</a>
-                    <a href="#" @click="shw_products_by_category('آبغوره')">آبغوره</a>
-                    <a href="#" @click="shw_products_by_category('آبلیمو')">آبلیمو</a>
-                    <a href="#" @click="shw_products_by_category('سرکه')">سرکه</a>
-                    <a href="#" @click="shw_products_by_category('دستمال کاغذی')">دستمال کاغذی</a>
-                    <a href="#" @click="shw_products_by_category('پودر لباسشویی')">پودر لباسشویی</a>
-                    <a href="#" @click="shw_products_by_category('صابون')">صابون</a>
-                    <a href="#" @click="shw_products_by_category('مایع ظرفشویی')">مایع ظرفشویی</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[3]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لوازم التحریر')">لوازم التحریر</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[4]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لوازم دیجیتال')">لوازم دیجیتال</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[5]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لوازم خانگی')">لوازم خانگی</a>
-                </div>
-            </transition>
         <div class="products-filters-sidebar col-12 col-md-3 col-lg-2 text-right p-2 px-2">
             <div class="d-flex flex-column">
                     <div class="d-flex flex-column border-bottom">
@@ -125,8 +42,24 @@
 
             {% endfor %}
             </div> {% endcomment %}
+            <div v-if="shw_products" class="product-cards w-100 p-3">
+                <product-card v-for="(product, index) in products" :key="index" :pid="index" :title="product.title" :image="product.featured_image" :max_order="product.max_order" :ordered_num="product.ordered_num" :delivery_date="product.deliver_at" :time_remaining="product.remaining_time"
+                :prices="product.prices"></product-card>
+                <product-details-box v-for="(product, index) in products" :key="index" 
+                :pid="index"
+                :title="product.title" 
+                :desc="product.description"
+                :image="product.featured_image" 
+                :max_order="product.max_order" 
+                :ordered_num="product.ordered_num"
+                :delivery_date="product.deliver_at" 
+                :time_remaining="product.remaining_time"
+                :prices="product.prices"
+                :order_ranges="product.order_ranges"
+                ></product-details-box>
+        </div>
             <div v-if="shw_api_results" class="product-cards w-100 p-3">
-                    <product-card v-for="(product, index) in products" :key="index" :pid="index" :title="product.title" :image="product.featured_image" :max_order="product.max_order" :ordered_num="product.ordered_num" :delivery_date="product.deliver_at" :time_remaining="product.remaining_time"
+                    <product-card v-for="(product, index) in search_products" :key="index" :pid="index" :title="product.title" :image="product.featured_image" :max_order="product.max_order" :ordered_num="product.ordered_num" :delivery_date="product.deliver_at" :time_remaining="product.remaining_time"
                     :prices="product.prices"></product-card>
                     <product-details-box v-for="(product, index) in products" :key="index" 
                     :pid="index" 
@@ -146,11 +79,4 @@
                 <a href="#">[[toPersianNum("2")]]</a>
             </div> {% endcomment %}
         </div>
-    </div>
-    <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
-    <!-- messages -->
-    <transition name="fade">
-        <div v-if="shw_alert" :class="msg_type" class="msg-box alert fixed-bottom text-right m-0 m-lg-2 p-2">[[msg_text]]</div>
-    </transition>
-</div>
 {% endblock content %}

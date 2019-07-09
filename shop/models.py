@@ -31,7 +31,7 @@ class product(models.Model):
     prices = models.TextField(verbose_name="رنج قیمت ها", blank=True)
     order_ranges = models.TextField(verbose_name="رنج سفارش", blank=True)
     max_order = models.CharField("سقف سفارش", blank=True, max_length=200)
-    ordered_num = models.IntegerField("سفارش های ثبت شده",blank=True,null=True)
+    ordered_num = models.IntegerField("سفارش های ثبت شده",default=0,blank=True,null=True)
     deliver_at = models.DateField(null=True,verbose_name="تاریخ تحویل")
     featured_image = models.ImageField(upload_to='images/%Y/%m/%d', null=True, verbose_name="تصویر اصلی")
     category = models.ForeignKey(Category, verbose_name="دسته بندی", null=True, on_delete=models.CASCADE)
