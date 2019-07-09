@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import product, order, cart
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 import json
 from persiantools import digits
 import logging
@@ -85,18 +88,22 @@ def cart_process(request):
 @csrf_exempt
 def cart_page(request):
     s_id = request.session.session_key
-    cdata = cart.objects.get(session_id=s_id)
-    c_titles = cdata.title.split('\n')
-    c_prices = cdata.price.split('\n')
-    c_amounts = cdata.amount.split('\n')
-    c_data = []
-    for i,item in enumerate(c_titles):
-        c_data.append({
-        "title": c_titles[i],
-        "price": to_fa(c_prices[i]),
-        "price_all": to_fa(str(int(c_prices[i])*int(c_amounts[i]))),
-        "amount": c_amounts[i],})
+    try:
+        cdata = cart.objects.get(session_id=s_id)
+        c_titles = cdata.title.split('\n')
+        c_prices = cdata.price.split('\n')
+        c_amounts = cdata.amount.split('\n')
+        c_data = []
+        for i,item in enumerate(c_titles):
+            c_data.append({
+            "title": c_titles[i],
+            "price": to_fa(c_prices[i]),
+            "price_all": to_fa(str(int(c_prices[i])*int(c_amounts[i]))),
+            "amount": c_amounts[i],})
+    except cart.DoesNotExist:
+        c_data = ''
     context = {'c_data': c_data}
+
     if request.method == 'POST':
         return HttpResponse(json.dumps(c_data))
     if request.method == 'GET':
@@ -112,6 +119,7 @@ def cart_update(request):
             cart_instance = cart.objects.filter(session_id=s_id).update(amount=cart_amounts)
     return HttpResponse('success')
 
-def account(request):
-    if request.method == 'GET':
-        return render(request, 'cart.html', context)
+class signup(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'signup.html'

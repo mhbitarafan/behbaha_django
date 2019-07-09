@@ -1,12 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>بهبها | {% block title %}{% endblock title %}</title>
-    <BASE href="http://127.0.0.1:8000/">
+    <meta name="google-signin-client_id"
+        content="75892808787-gt2vmjmdv22576v49boiidh0o4nhnrec.apps.googleusercontent.com">
+    <title>با صرفه تر | {% block title %}{% endblock title %}</title>
+    <BASE href="http://localhost:8000/">
+    <link href="media/favicon.ico" rel="icon" type="image/x-icon" />
     <link href="{% static 'libraries/bootstrap-4.3.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'libraries/font-awesome/css/all.min.css' %}" rel="stylesheet">
     <link href="{% static 'libraries/vue/vue-select.css' %}" rel="stylesheet">
@@ -18,42 +22,60 @@
     <script src="{% static 'libraries/js.cookie.min.js' %}"></script>
     <script src="{% static 'libraries/ifvisible.min.js' %}"></script>
 </head>
-<body>
-<div id="app" class="container-fluid p-0">
-{% block header %}
-    <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
-        <div class="d-flex">
-            <span class="text-dark h3 m-0 py-1 px-2"><a class="text-danger" href="">با صرفه تر</a></span>
-        </div>
-        <div class="search position-relative col-12 col-sm-8 mt-3 mt-sm-0 p-0 d-flex">
-            <div class="position-relative w-100 d-flex">
-                <input autofocus type="search" v-model="search_term" @input="search(search_term)" placeholder="جستجو ..." name="s" id="search"
-                    class="border px-4 py-2 w-100 h-100">
-                <input type="button" value="جستجو" @click="search(search_term)" class="bg-warning border search-btn px-3 h-100">
-            </div>
-        </div>
-        <div class="icons d-flex">
-            <a href="/cart/" class="text-dark"><i class="fas fa-user-circle" style="font-size:2.15rem;"></i></a>
-            <a href="/cart/" class="text-dark"><i class="fas fa-shopping-cart"></i></a>
-        </div>
-    </div>
-    <div class="d-flex cat-header justify-content-center p-0 py-2">
-        <div v-if="shw_use_period" class="cat-header-item row justify-content-center align-items-center m-0">
-            <span class="h5 my-2">دوره مصرف</span>
-            <div class="cat-buttons my-1 d-flex flex-wrap">
-                <div @click="shw_product_type(0)">دائم</div>
-                <div @click="shw_product_type(1)">کوتاه مدت</div>
-                <div @click="shw_product_type(2)">میان مدت</div>
-                <div @click="shw_product_type(3)">بلند مدت</div>
-                <div @click="shw_product_type(4)">طولانی مدت</div>
-                <div @click="shw_product_type(5)">عمری</div>
-            </div>
-        </div>
-    </div>
 
-    <div class="cards-container d-flex flex-row-reverse">
-        <!-- sub categories -->
-        <transition name="slide">
+<body>
+    <div id="app" class="container-fluid p-0">
+        {% block header %}
+        <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
+            <div class="d-flex">
+                <span class="text-dark h3 m-0 py-1 px-2"><a class="text-danger" href="">با صرفه تر</a></span>
+            </div>
+            <div class="search position-relative col-12 col-sm-8 mt-3 mt-sm-0 p-0 d-flex">
+                <div class="position-relative w-100 d-flex">
+                    <input autofocus type="search" v-model="search_term" @input="search(search_term)"
+                        placeholder="جستجو ..." name="s" id="search" class="border px-4 py-2 w-100 h-100">
+                    <input type="button" value="جستجو" @click="search(search_term)"
+                        class="bg-warning border search-btn px-3 h-100">
+                </div>
+            </div>
+            <div class="icons d-flex">
+                {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="text-dark" title="خروج از حساب کاربری"><i class="fas fa-sign-out"
+                        style="font-size:2.15rem;"></i></a>
+                <a href="{% url 'login' %}" class="text-dark" title="مدیریت حساب کاربری"><i class="fas fa-user-circle"
+                        style="font-size:2.15rem;"></i></a>
+                {% url 'login' as the_url %}      
+                {% with "http://localhost:8000"|add:the_url as ref %}
+                    {% if request.META.HTTP_REFERER == ref %}
+
+                    {% endif %} 
+                {% endwith %}  
+                {% else %}
+                <a href="{% url 'signup' %}" class="text-dark" title="ثبت نام"><i class="fas fa-user-plus"></i></a>
+                <a href="{% url 'login' %}" class="text-dark" title="ورود به حساب کاربری"><i class="fas fa-user-circle"
+                        style="font-size:2.15rem;"></i></a>
+                {% endif %}
+                <a href="{% url 'cart_page' %}" class="text-dark" title="سبد خرید"><i
+                        class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+        <div class="d-flex cat-header justify-content-center p-0 py-2">
+            <div v-if="shw_use_period" class="cat-header-item row justify-content-center align-items-center m-0">
+                <span class="h5 my-2">دوره مصرف</span>
+                <div class="cat-buttons my-1 d-flex flex-wrap">
+                    <div @click="shw_product_type(0)">دائم</div>
+                    <div @click="shw_product_type(1)">کوتاه مدت</div>
+                    <div @click="shw_product_type(2)">میان مدت</div>
+                    <div @click="shw_product_type(3)">بلند مدت</div>
+                    <div @click="shw_product_type(4)">طولانی مدت</div>
+                    <div @click="shw_product_type(5)">عمری</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-container d-flex flex-row-reverse">
+            <!-- sub categories -->
+            <transition name="slide">
                 <div v-if="product_type[0]" class="product-type">
                     <a href="#" @click="shw_products_by_category('لبنیات')">لبنیات</a>
                     <a href="#" @click="shw_products_by_category('سبزیجات')">سبزیجات</a>
@@ -102,17 +124,16 @@
                     <a href="/products/category/لوازم-خانگی">لوازم خانگی</a>
                 </div>
             </transition>
-{% endblock header %}
-{% block content %}
-{% endblock content %}
-</div>
-    <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
-    <!-- messages -->
-    <transition name="fade">
-        <div v-if="shw_alert" :class="msg_type" class="msg-box alert fixed-bottom text-right m-0 m-lg-2 p-2">[[msg_text]]</div>
-    </transition>
-</div>
-<script src="{% static 'js/cities.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+            {% endblock header %}
+            {% block content %}
+            {% endblock content %}
+        </div>
+        <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
+        <!-- messages -->
+<message :msg="store.state.msg_txt" :msgtype="store.state.msg_type"></message>
+    </div>
+    <script src="{% static 'js/cities.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
+
 </html>

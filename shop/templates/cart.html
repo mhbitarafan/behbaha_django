@@ -2,10 +2,16 @@
 {% load shop_tags %}
 {% block title %}سبد خرید{% endblock title %}
 {% block content %}
-        <!-- main content     -->
-        <div class="my-3 d-flex w-100 justify-content-center">
-            <div class="col-12 col-lg-10 d-flex flex-column align-items-center p-2 shadow" :style="cart_container_height" style="direction: ltr;overflow: auto;">
-                <cart-items c_data="{{c_data}}"></cart-items>
-            </div>
-        </div>
+<!-- main content     -->
+<div class="noside-container py-3 bg-dark d-flex w-100 justify-content-center">
+    <div class="col-12 bg-white col-lg-10 d-flex flex-column align-items-center p-2 shadow"
+        :style="cart_container_height" style="direction: ltr;overflow: auto;">
+        {% if c_data != '' %}
+        <cart-items c_data="{{c_data}}"></cart-items>
+        {% else %}
+        <h3 class="mt-5 text-danger text-right">!سبد خرید شما خالی می باشد</h3>
+        <img src="media/ufo.gif" alt="cart is empty">
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}

@@ -10,12 +10,17 @@ String.prototype.toPersianDigits= function(){
       return persian[+w]
   });
 }  
+Vue.config.devtools = true
 const store = new Vuex.Store({
   state: {
     shw_overlay2: false,
     sh_details_box: [],
     base_cart_amounts: [],
     cart_amounts: [],
+    msg_text: '',
+    msg_type: '',
+    shw_alert: false,
+    msg_timeout: '',
   },
   mutations: {
     set_overlay2(state, payload) {
@@ -33,9 +38,25 @@ const store = new Vuex.Store({
     reset_base_cart_amounts(state) {
       state.base_cart_amounts = state.cart_amounts.slice();
     },
+    set_msg_text(state, payload) {
+      state.msg_text = payload;
+    },
+    set_msg_type(state, payload) {
+      state.msg_type = payload;
+    },
+    set_shw_alert(state, payload) {
+      state.shw_alert = payload;
+    },
+    set_msg_timeout(state) {
+      state.msg_timeout = setTimeout(() => {
+        state.shw_alert = false;
+      }, 4000);;
+    },
+    clear_msg_timeout(state) {
+      window.clearTimeout(state.msg_timeout);
+    }
   }
 });
-Vue.config.devtools = true
 Vue.component('v-select', VueSelect.VueSelect);
 Vue.mixin({
   methods: {
@@ -63,6 +84,12 @@ Vue.mixin({
   },
   to_fa_s(x) {
     return this.to_fa(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+},
+set_msg(txt, type){
+  store.commit('set_msg_text', txt);
+  store.commit('set_msg_type', type);
+  store.commit('set_shw_alert', true);
+  store.commit('set_msg_timeout');
 },
   }
 })
@@ -162,7 +189,7 @@ Vue.component('product-details-box', {
   },
   add_to_cart(title,o_amount){
     this.base_order_amount = this.order_amount;
-    vm.shw_alert = false;
+    store.commit('set_shw_alert', false);
     this.disabled = true;
     this.title_msg = 'این میزان سفارش به سبد خرید شما افزوده شده است، برای تغییر آن مقدار دلخواه خود را در کادر مربوطه وارد نمایید.';
     if(this.base_order_amount == this.order_amount){
@@ -171,9 +198,9 @@ Vue.component('product-details-box', {
       this.disabled = false;
       this.title_msg = '';
     }
-    window.clearTimeout(vm.msg_timeout);
+    store.commit('clear_msg_timeout');
     this.$http.get('/add_to_cart?title='+title+'&order_amount='+o_amount).then(response => {
-      vm.set_msg("'" + o_amount + ' ' + title + "'" + ' به سبد خرید افزوده شد', 'alert-success');
+      this.set_msg("'" + o_amount + ' ' + title + "'" + ' به سبد خرید افزوده شد', 'alert-success');
     }, response => {
       // error callback
     });
@@ -212,11 +239,11 @@ Vue.component('product-details-box', {
 },
 props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'image', 'desc', 'order_ranges', 'pid', 'ordered_num',],
   template: `
-  <div v-if="store.state.sh_details_box[pid]">
-  <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()">
-    <div class="position-absolute close-btn"><i class="fas fa-times"></i></div>
-  </div>
   <transition name="fade">
+  <div v-if="store.state.sh_details_box[pid]" style="z-index: 7;">
+  <div v-if="store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()">
+  <div class="position-absolute close-btn"><i class="fas fa-times"></i></div>
+  </div>
   <div v-if="store.state.sh_details_box[pid]" class="product-details-box p-1 d-flex flex-row-reverse" @mouseover="hide_product_type()">
       <div class="dt-img d-flex flex-column col-5 col-lg-5">
         <img :src="image">
@@ -284,11 +311,10 @@ props: ['title', 'max_order', 'delivery_date', 'time_remaining', 'prices', 'imag
                   <div class="p-2 text-justify">
                    {{desc}}
                   </div>
-      </div>     
-        
+      </div>    
   </div>
-</transition>
-</div>
+  </div>
+  </transition>
   `
 });
 
@@ -371,7 +397,7 @@ Vue.component('cart-items', {
     update_cart() {
       var amounts = store.state.cart_amounts;
       this.$http.get('/update_cart?cart_amounts=' + amounts).then(response => {
-        vm.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'alert-success');
+        this.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'alert-success');
         store.commit('reset_base_cart_amounts');
         this.disabled = true;
       }, response => {
@@ -440,6 +466,17 @@ template: `
 `,
 });
 
+Vue.component('message', {
+  props: ['msg', 'msgtype'],
+  mounted() {
+    // this.set_msg('this.msg', "alert-success");
+  },
+template: `
+<transition name="fade-slideup">
+<div v-if="store.state.shw_alert" :class="store.state.msg_type" class="msg-box alert fixed-bottom text-right m-0 m-lg-2 p-2">{{store.state.msg_text}}</div>
+</transition>
+`
+});
 
 var vm = new Vue({
     delimiters: ['[[', ']]'],
@@ -458,16 +495,12 @@ var vm = new Vue({
         max_price: '',
         cards_container_height: '',
         cart_container_height: '',
-        shw_alert: false,
         search_term: '',
         products: [],
         search_products: [],
-        msg_text: '',
-        msg_type: '',
         updated_cart_data: '',
         disabled: true,
         cart_amounts: [],
-        msg_timeout: '',
     },
     mounted:function(){
       document.querySelector('#search').focus();
@@ -488,11 +521,16 @@ var vm = new Vue({
         this.header_height = document.querySelector('#header').offsetHeight;
         this.cat_header_height = document.querySelector('.cat-header').offsetHeight;
         var a = "calc(100vh - " + (this.cat_header_height + this.header_height) + "px)";
-        var b = "calc(100vh - " + (this.cat_header_height + this.header_height + 40) + "px)";
+        var b = "calc(100vh - " + (this.cat_header_height + this.header_height + 33) + "px)";
         this.cards_container_height = {height: a};
         this.cart_container_height = {height: b};
       },
       shw_product_type(index){
+        if(this.product_type[index] == true){
+          this.$set(this.product_type, index, false);
+          this.shw_overlay = false;
+          return false;
+        }
         for(var i=0; i < this.product_type.length; i++){
           this.product_type[i] = false;
         }
@@ -505,22 +543,12 @@ var vm = new Vue({
         }
         this.shw_overlay = false;
       },
-      set_msg(txt, type){
-        this.msg_text = txt;
-        this.msg_type = type;
-        this.shw_alert = true;
-        this.msg_timeout = setTimeout(() => {
-          this.shw_alert = false;
-        }, 4000);
-      },
       shw_products_by_category(t){
         this.shw_products = true;
         this.shw_overlay = false;
         this.hide_product_type();
         this.$http.get('/api/products/?category='+t).then(response => {
           this.shw_api_results = false;
-          vm.shw_alert = false;
-          window.clearTimeout(vm.msg_timeout);
           const body = response.body;
           const results = body.results;
           if(body.count != 0) {
@@ -541,8 +569,8 @@ var vm = new Vue({
       search(s){
         this.search_products = [];
         this.shw_products = false;
-        vm.shw_alert = false;
-        window.clearTimeout(vm.msg_timeout);
+        store.commit('set_shw_alert', false);
+        store.commit('clear_msg_timeout');
         if(s != ''){
           this.$http.get('/api/products/?search='+s).then(response => {
             // get body data
