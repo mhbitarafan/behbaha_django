@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}مدیریت حساب کاربری{% endblock title %}
+{% block content %}
+<!-- main content     -->
+<div class="noside-container py-3 d-flex w-100 justify-content-center" :style="cart_container_height">
+    <div class="bg-white d-flex flex-column col-11 p-2 rounded shadow align-items-center"
+        style="direction: ltr;overflow: auto;">
+        <div class="col-12" dir=rtl>
+            <div class="row justify-content-between p-3 align-items-center">
+                <h3 class="text-right">مدیریت حساب کاربری</h3>
+            </div>
+            <form method="post" class="text-right">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.first_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.last_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.phone|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.mobile_phone|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        {{ form.state|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        {{ form.city|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                            {{ form.zip_code|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-12 mb-0">
+                            {{ form.address|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row justify-content-between bg-light p-3 align-items-center">
+                    <button class="btn btn-primary" type="submit">به روزرسانی </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

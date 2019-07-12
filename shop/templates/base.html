@@ -42,7 +42,7 @@
                 {% if user.is_authenticated %}
                 <a href="{% url 'logout' %}" class="text-dark" title="خروج از حساب کاربری"><i class="fas fa-sign-out"
                         style="font-size:2.15rem;"></i></a>
-                <a href="{% url 'login' %}" class="text-dark" title="مدیریت حساب کاربری"><i class="fas fa-user-circle"
+                <a href="{% url 'manage_account' %}" class="text-dark" title="مدیریت حساب کاربری"><i class="fas fa-user-circle"
                         style="font-size:2.15rem;"></i></a>
                 {% url 'login' as the_url %}      
                 {% with "http://localhost:8000"|add:the_url as ref %}
@@ -77,8 +77,8 @@
             <!-- sub categories -->
             <transition name="slide">
                 <div v-if="product_type[0]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لبنیات')">لبنیات</a>
-                    <a href="#" @click="shw_products_by_category('سبزیجات')">سبزیجات</a>
+                    <a href="/products/category/لبنیات">لبنیات</a>
+                    <a href="/products/category/سبزیجات">سبزیجات</a>
                 </div>
             </transition>
             <transition name="slide">

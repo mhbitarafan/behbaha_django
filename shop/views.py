@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import product, order, cart
+from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -16,14 +17,22 @@ def to_fa(value):
     a = f'{num:,}'
     return digits.en_to_fa(a)
 
+def to_en(value):
+    num = value.replace(',', '')
+    return int(digits.fa_to_en(num))
+
 def index(request):
     # products = product.objects.all()
     # context = {'products': products,}
+    if not request.session.session_key:
+        request.session.save()    
     return render(request, 'index.html')
 
 def product_cat(request, cat):
     # products = product.objects.filter(category__title=cat)
     # context = {'products': products, 'cat': cat}
+    if not request.session.session_key:
+        request.session.save()
     return render(request, 'index.html')
 
 def search(request):
@@ -36,8 +45,11 @@ def calc_price(prices, amount):
     prices_arr = prices.split('\n')
     return int(prices_arr[0])
 
-def update_cart(title, amount, price, s_id):
-    cart_data = cart.objects.get(session_id=s_id)
+def update_cart(title, amount, price, s_id, user_id):
+    if user_id != None:
+        cart_data = cart.objects.get(cart_customer_id=user_id)
+    else:
+        cart_data = cart.objects.get(session_id=s_id)
     c_titles = cart_data.title
     c_titles_arr = c_titles.split('\n')
     c_prices = cart_data.price
@@ -65,10 +77,10 @@ def update_cart(title, amount, price, s_id):
         'order_amount': c_amounts,
     }
 
-def cart_process(request):
+def add_to_cart(request):
     if request.method == 'GET':
         ordered_product = product.objects.get(title=request.GET['title'])
-        order_ranges = ordered_product.order_ranges
+        # order_ranges = ordered_product.order_ranges
         prices = ordered_product.prices
         # current_numberof_orders = 
         cdata = {
@@ -76,20 +88,66 @@ def cart_process(request):
             'order_amount': request.GET['order_amount']
         }
         price = calc_price(prices, cdata['order_amount'])
+        price = to_fa(price)
+        if not request.session.session_key:
+            request.session.save()
         s_id = request.session.session_key
+        user_id = request.user.id
         query_s_id = cart.objects.filter(session_id=s_id)
+        if(user_id != None):
+            query_user_id = cart.objects.filter(cart_customer_id=user_id)
+            if query_user_id.exists():
+                u_data = update_cart(cdata['title'], cdata['order_amount'], price, s_id, user_id)
+                cart_instance = cart.objects.filter(cart_customer_id=user_id).update(title=u_data['title'], amount=u_data['order_amount'], price=u_data['price'], session_id=s_id, cart_customer_id=user_id)
+            else:    
+                cart_instance = cart.objects.create(title=cdata['title'], amount=cdata['order_amount'], price=price, session_id=s_id, cart_customer_id=user_id)
+            return HttpResponse('')
         if query_s_id.exists():
-            u_data = update_cart(cdata['title'], cdata['order_amount'], price, s_id)
-            cart_instance = cart.objects.filter(session_id=s_id).update(title=u_data['title'], amount=u_data['order_amount'], price=u_data['price'])
+            u_data = update_cart(cdata['title'], cdata['order_amount'], price, s_id, user_id)
+            cart_instance = cart.objects.filter(cart_customer_id=user_id).update(title=u_data['title'], amount=u_data['order_amount'], price=u_data['price'], session_id=s_id)
         else:
             cart_instance = cart.objects.create(title=cdata['title'], amount=cdata['order_amount'], price=price, session_id=s_id)
-    return HttpResponse(u_data)
+        return HttpResponse('')
+
+def cart_update(request):
+    if request.method == 'GET':
+        cart_amounts = request.GET['cart_amounts']
+        cart_amounts = cart_amounts.replace(',', '\n')
+        s_id = request.session.session_key
+        user_id = request.user.id
+        if user_id == None:
+            cart_instance = cart.objects.filter(session_id=s_id)
+            if cart_instance.exists():
+                cart_instance = cart.objects.filter(session_id=s_id).update(amount=cart_amounts)
+        else:
+            cart_instance = cart.objects.filter(cart_customer_id=user_id)    
+            if cart_instance.exists():
+                cart_instance = cart.objects.filter(cart_customer_id=user_id).update(amount=cart_amounts)
+    return HttpResponse('success')
 
 @csrf_exempt
 def cart_page(request):
     s_id = request.session.session_key
-    try:
-        cdata = cart.objects.get(session_id=s_id)
+    user_id = request.user.id
+    if user_id != None:
+        user_instance = customer.objects.get(id=user_id)
+        form = CustomerForm(instance=user_instance)
+        form2 = OrderForm()
+        try:
+            cdata = cart.objects.get(cart_customer_id=user_id)
+        except cart.DoesNotExist:
+            try:
+                cdata = cart.objects.get(session_id=s_id)
+            except cart.DoesNotExist:
+                cdata = ''
+    else:
+        form = CustomerForm()
+        form2 = OrderForm()
+        try:
+            cdata = cart.objects.get(session_id=s_id)
+        except cart.DoesNotExist:
+            cdata = ''
+    if cdata != '':
         c_titles = cdata.title.split('\n')
         c_prices = cdata.price.split('\n')
         c_amounts = cdata.amount.split('\n')
@@ -97,29 +155,65 @@ def cart_page(request):
         for i,item in enumerate(c_titles):
             c_data.append({
             "title": c_titles[i],
-            "price": to_fa(c_prices[i]),
-            "price_all": to_fa(str(int(c_prices[i])*int(c_amounts[i]))),
-            "amount": c_amounts[i],})
-    except cart.DoesNotExist:
-        c_data = ''
-    context = {'c_data': c_data}
+            "price": c_prices[i],
+            "price_all": to_fa(to_en(c_prices[i])*to_en(c_amounts[i])),
+            "amount": c_amounts[i],})         
+    else:
+        c_data = ''    
+    context = {'c_data': c_data, 'form': form, 'form2': form2}
 
     if request.method == 'POST':
         return HttpResponse(json.dumps(c_data))
     if request.method == 'GET':
         return render(request, 'cart.html', context)
 
-def cart_update(request):
-    if request.method == 'GET':
-        cart_amounts = request.GET['cart_amounts']
-        cart_amounts = cart_amounts.replace(',', '\n')
-        s_id = request.session.session_key
-        cart_instance = cart.objects.filter(session_id=s_id)
-        if cart_instance.exists():
-            cart_instance = cart.objects.filter(session_id=s_id).update(amount=cart_amounts)
-    return HttpResponse('success')
+@csrf_exempt
+def submit_order(request):
+    user_id = request.user.id
+    s_id = request.session.session_key
+    request.POST = request.POST.copy()
+    if user_id != None:
+        user_instance = customer.objects.get(id=user_id)
+        cart_instance = cart.objects.get(cart_customer_id=user_id)
+        request.POST['order_customer'] = user_id
+    else:    
+        cart_instance = cart.objects.get(session_id=s_id)
+    request.POST['price'] = cart_instance.price
+    request.POST['title'] = request.POST['title'].replace(',', '\n')
+    request.POST['amount'] = request.POST['amount'].replace(',', '\n')
+    amounts = request.POST['amount'].split('\n')
+    titles = request.POST['title'].split('\n')
+    for i, title in enumerate(titles):
+        product_instance = product.objects.get(title=title)
+        orderednumber = product_instance.ordered_num + to_en(amounts[i])
+        product.objects.filter(title=title).update(ordered_num = orderednumber)
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid:
+            form.save()
+            cart_instance.delete()
+    return redirect('/')
 
+def update_customer_info(request):
+    user_id = request.user.id
+    user_instance = customer.objects.get(id=user_id)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, instance=user_instance)
+        if form.is_valid:
+            form.save()
+    return HttpResponse('')
+    
 class signup(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+
+def manage_account(request):
+    user_id = request.user.id
+    user_instance = customer.objects.get(id=user_id)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, instance=user_instance)
+        if form.is_valid:
+            form.save()
+    form = CustomerForm(instance=user_instance)
+    return render(request, 'manage_account.html', {'form': form})
