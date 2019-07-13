@@ -62,16 +62,16 @@ class orderAdmin(admin.ModelAdmin):
     models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':38})}
     }
     
-@admin.register(customer)
-class customerAdmin(admin.ModelAdmin):
-    # list_display = ('id', 'name', 'phone', 'mobile_phone')
-    # fields = ('user', 'name', 'phone', 'mobile_phone', 'address', 'zip_code')
-    # search_fields = ['id', 'name']
-    autocomplete_fields = ("user",)
-    formfield_overrides = {
-    models.CharField: {'widget': TextInput(attrs={'size':'40'})},
-    models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':38})}
-    }
+# @admin.register(customer)
+# class customerAdmin(admin.ModelAdmin):
+#     # list_display = ('id', 'name', 'phone', 'mobile_phone')
+#     # fields = ('user', 'name', 'phone', 'mobile_phone', 'address', 'zip_code')
+#     # search_fields = ['id', 'name']
+#     autocomplete_fields = ("user",)
+#     formfield_overrides = {
+#     models.CharField: {'widget': TextInput(attrs={'size':'40'})},
+#     models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':38})}
+#     }
 
 @admin.register(cart)
 class cartAdmin(admin.ModelAdmin):
