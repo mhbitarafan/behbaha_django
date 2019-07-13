@@ -227,3 +227,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='75892808787-gt2vmjmdv22576v49boiidh0o4nhnrec.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'frAWuiZ-bOOwUrZ5w3MlKwsH'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+import django_heroku
+django_heroku.settings(locals())

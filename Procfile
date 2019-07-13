@@ -1,0 +1,1 @@
+web: gunicorn behbaha_django.wsgi
