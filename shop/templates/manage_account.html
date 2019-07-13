@@ -13,6 +13,7 @@
             <form method="post" class="text-right">
                 {% csrf_token %}
                 <div class="form-row">
+                <input name="user" type="hidden" value="{{request.user.id}}">
                     <div class="form-group col-md-6 mb-0">
                         {{ form.first_name|as_crispy_field }}
                     </div>

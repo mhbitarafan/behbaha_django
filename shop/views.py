@@ -130,8 +130,13 @@ def cart_page(request):
     s_id = request.session.session_key
     user_id = request.user.id
     if user_id != None:
-        user_instance = customer.objects.get(id=user_id)
-        form = CustomerForm(instance=user_instance)
+        try:
+            customer_instance = customer.objects.get(user_id=user_id)
+            customer_id = customer_instance.id
+            form = CustomerForm(instance=customer_instance)
+        except customer.DoesNotExist:
+            customer_id = ''
+            form = CustomerForm()
         form2 = OrderForm()
         try:
             cdata = cart.objects.get(cart_customer_id=user_id)
@@ -141,6 +146,7 @@ def cart_page(request):
             except cart.DoesNotExist:
                 cdata = ''
     else:
+        customer_id = ''
         form = CustomerForm()
         form2 = OrderForm()
         try:
@@ -160,7 +166,7 @@ def cart_page(request):
             "amount": c_amounts[i],})         
     else:
         c_data = ''    
-    context = {'c_data': c_data, 'form': form, 'form2': form2}
+    context = {'c_data': c_data, 'form': form, 'form2': form2, 'customer_id': customer_id}
 
     if request.method == 'POST':
         return HttpResponse(json.dumps(c_data))
@@ -173,9 +179,16 @@ def submit_order(request):
     s_id = request.session.session_key
     request.POST = request.POST.copy()
     if user_id != None:
-        user_instance = customer.objects.get(id=user_id)
+        try:
+            customer_instance = customer.objects.get(user_id=user_id)
+        except customer.DoesNotExist:
+            if request.method == 'POST':
+                form = CustomerForm(request.POST)
+                if form.is_valid:
+                    form.save()
+                    customer_instance = customer.objects.get(user_id=user_id)
+                    request.POST['order_customer'] = customer_instance.id
         cart_instance = cart.objects.get(cart_customer_id=user_id)
-        request.POST['order_customer'] = user_id
     else:    
         cart_instance = cart.objects.get(session_id=s_id)
     request.POST['price'] = cart_instance.price
@@ -210,10 +223,18 @@ class signup(generic.CreateView):
 
 def manage_account(request):
     user_id = request.user.id
-    user_instance = customer.objects.get(id=user_id)
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, instance=user_instance)
-        if form.is_valid:
-            form.save()
-    form = CustomerForm(instance=user_instance)
+    try:
+        user_instance = customer.objects.get(user_id=user_id)
+        form = CustomerForm(instance=user_instance)
+        if request.method == 'POST':
+            request.POST = request.POST.copy()
+            form = CustomerForm(request.POST, instance=user_instance)
+            if form.is_valid:
+                form.save()
+    except customer.DoesNotExist:
+        form = CustomerForm()
+        if request.method == 'POST':
+            form = CustomerForm(request.POST)
+            if form.is_valid:
+                form.save()
     return render(request, 'manage_account.html', {'form': form})

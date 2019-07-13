@@ -18,6 +18,8 @@
                 <div class="row justify-content-center mt-4 w-100" dir="rtl">
                     <h3 class="text-right col-12 mb-4 p-0">اطلاعات سفارش</h3>
                     <div class="form-row">
+                    <input name="order_customer" type="hidden" value="{{customer_id}}">
+                    <input name="user" type="hidden" value="{{request.user.id}}">
                         <div class="form-group col-md-6 mb-0">
                             {{ form.first_name|as_crispy_field }}
                         </div>
@@ -60,7 +62,7 @@
         </div>
         {% else %}
         <h3 class="mt-5 text-danger text-right col-12 w-100 text-center">!سبد خرید شما خالی می باشد</h3>
-        <img src="media/ufo.gif" alt="cart is empty">
+        <img src="https://cdn.dribbble.com/users/887568/screenshots/3172047/ufo.gif" alt="cart is empty">
         {% endif %}
     </div>
 </div>
