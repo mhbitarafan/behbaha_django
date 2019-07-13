@@ -5,6 +5,9 @@
 * {
     font-family : "yekan"!important
    }
-/* body {
-    zoom: 1.1;
-}    */
+   input, textarea, select, .form-row p, form .button {
+    font-family : "yekan"!important;
+   }   
+   .field-titleAamount{
+       white-space: pre-line;       
+   }

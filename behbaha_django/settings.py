@@ -79,7 +79,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 24,
 }
 
 MIDDLEWARE = [
@@ -118,14 +118,20 @@ WSGI_APPLICATION = 'behbaha_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'NAME': 'basarfetar',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'root',
+        'PASSWORD': '123456'
+    },
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -214,7 +220,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'manage_account'
 LOGOUT_REDIRECT_URL = 'login'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='75892808787-gt2vmjmdv22576v49boiidh0o4nhnrec.apps.googleusercontent.com'
