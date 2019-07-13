@@ -213,7 +213,7 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 if DEBUG: 
-   STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+   STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
