@@ -9,6 +9,7 @@
 *.pyc
 __pycache__/
 db.sqlite3
+media
 local_settings.py
 static
 

@@ -9,7 +9,7 @@
         <div class="row justify-content-center w-100">
             {% if c_data != '' %}
             <form method="POST" action="{% url 'submit_order' %}" class="row justify-content-center text-right col-12"
-                ref="order_form">
+                ref="order_form" @submit="submit_order()">
                 {% csrf_token %}
                 <div class="d-flex flex-row w-100 justify-content-center">
                     <h2 class="text-right mt-2 col-12 p-2 text-danger">سبد خرید</h2>
@@ -55,8 +55,7 @@
                         </div>
                     </div>
                     <div class="row col-12 rounded justify-content-between bg-light p-3 align-items-center">
-                        <button class="btn btn-success" type="submit" :disabled="order_disabled"
-                            @click.prevent="submit_order()">ثبت سفارش</button>
+                        <button class="btn btn-success" type="submit" :disabled="order_disabled">ثبت سفارش</button>
                     </div>
             </form>
         </div>

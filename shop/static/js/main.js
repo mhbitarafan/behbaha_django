@@ -173,7 +173,7 @@ Vue.component('product-card', {
                     {{to_fa(delivery_date)}}
                 </div>
                 <div class="card-box-img">
-                    <img :src="image">
+                    <img :src="['/media/' + image]">
                 </div>
                 <div class="card-box-price pt-1 px-2 w-100 text-right">
                 <div class="d-flex justify-content-between">
@@ -309,7 +309,7 @@ Vue.component('product-details-box', {
   <div class="position-fixed close-btn" @click="hide_overlay2(pid)"><i class="fas fa-times"></i></div>
   <div v-if="store.state.sh_details_box[pid]" class="product-details-box p-1 row flex-row-reverse" @mouseover="hide_product_type()">
       <div class="dt-img d-flex flex-column col-12 col-lg-5 mt-5 mt-lg-0">
-        <img :src="image">
+        <img :src="['/media/' + image]">
         <div class="d-flex mt-2 mb-4 justify-content-center">
           <div>
             <span class="fa fa-star checked"></span>
@@ -603,7 +603,7 @@ var vm = new Vue({
     order_disabled: false,
     cart_amounts: [],
     next_page: null,
-    next_disabled: false,
+    next_disabled: true,
   },
   mounted: function () {
     document.querySelector('#search').focus();
@@ -812,13 +812,7 @@ var vm = new Vue({
     async submit_order() {
       this.order_disabled = true;
       await this.update_cart(false);
-      this.$refs.order_form.submit();
       this.set_msg('سفارش شما با موفقیت ثبت شد.', 'alert-success');
-      // this.$http.post('/submit_order/').then(response => {
-      //   this.set_msg('سفارش شما با موفقیت ثبت شد.', 'alert-success');
-      // }, response => {
-      //   // error callback
-      // });
     },
   },
 });

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'shop.apps.ShopConfig',
 ]
+
 JALALI_DATE_DEFAULTS = {
    'Strftime': {
         'date': '%y/%m/%d',

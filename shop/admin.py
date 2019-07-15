@@ -10,6 +10,8 @@ from django.utils import timezone
 import pytz
 from persiantools import digits
 from social_django.models import Association, Nonce, UserSocialAuth
+from django.utils.html import format_html
+from filebrowser.settings import ADMIN_THUMBNAIL
 
 def to_fa(value):
     num = int(value)
@@ -97,7 +99,7 @@ class categoryAdmin(admin.ModelAdmin):
     
 @admin.register(product)
 class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
-    list_display = ('title', 'j_delivery_time', 'max_order', 'base_price_u')
+    list_display = ('thumbnail', 'title', 'j_delivery_time', 'max_order', 'base_price_u')
     fields = ('title', ('order_ranges', 'prices'), 'max_order', 'ordered_num', 'deliver_at', 'category', 'description', 'featured_image',)
     search_fields = ["title"]
     autocomplete_fields = ("category",)
@@ -112,6 +114,12 @@ class productAdmin(ModelAdminJalaliMixin, admin.ModelAdmin):
     def base_price_u(self, obj):
         return "%s %s" % (to_fa(obj.base_price), 'تومان')
     base_price_u.short_description = 'قیمت پایه'    
+    def thumbnail(self, obj):
+        if obj.featured_image and obj.featured_image.filetype == "Image":
+            return format_html(u'<img src="{}" />', obj.featured_image.version_generate(ADMIN_THUMBNAIL).url)
+        else:
+            return ""        
+    thumbnail.short_description = 'عکس'    
     class Media:
         css = {
                 'all': ('css/admin-extra.css',)

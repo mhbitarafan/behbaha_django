@@ -42,9 +42,9 @@ input{
 #search{
     border-radius: 0 30px 30px 0;
 }
-.icons{
+/* .icons{
     display: none!important;
-}
+} */
 .search-btn {
     padding: 0.4rem 0.7rem;
     border: 0;
@@ -75,6 +75,8 @@ input{
     border: 1px solid #b1b1b1;
 }
 .cat-buttons div{
+    flex: 1 0 auto;
+    text-align: center;
     margin: 0.5rem;
     cursor: pointer;
     color: black;

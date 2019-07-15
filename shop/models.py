@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from filebrowser.fields import FileBrowseField
 
 # Create your models here.
 class image(models.Model):
@@ -34,7 +35,7 @@ class product(models.Model):
     max_order = models.CharField("سقف سفارش", blank=True, max_length=200)
     ordered_num = models.IntegerField("سفارش های ثبت شده",default=0,blank=True,null=True)
     deliver_at = models.DateField(null=True,verbose_name="تاریخ تحویل")
-    featured_image = models.ImageField(upload_to='images/%Y/%m/%d', null=True, verbose_name="تصویر اصلی")
+    featured_image = FileBrowseField("Image", max_length=200, directory="images/", blank=True)
     category = models.ManyToManyField(Category, verbose_name="دسته بندی")
     # gallery = models.ManyToManyField(image, verbose_name="گالری تصاویر", blank=True)
     description = models.TextField("توضیحات", blank=True)
