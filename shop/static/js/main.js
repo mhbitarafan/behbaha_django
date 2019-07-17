@@ -394,9 +394,6 @@ Vue.component('cart-items', {
     this.save_cart_data(this.c_data);
     ifvisible.on("focus", this.get_cart_data);
   },
-  computed: {
-
-  },
   methods: {
     save_cart_data(cart_data) {
       var cart_items = cart_data.replace(/'/g, '"');

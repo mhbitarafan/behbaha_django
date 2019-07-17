@@ -1,0 +1,23 @@
+{% load crispy_forms_tags %}
+<div class="noside-container py-3 d-flex w-100 justify-content-center pt-3 pt-sm-5" :style="cards_container_height">
+    <div class="bg-white d-flex flex-column col-11 col-lg-4 p-2 rounded shadow align-items-center"
+        style="direction: ltr;overflow: auto;height: max-content;">
+        <div class="col-12" dir=rtl>
+            <div class="row justify-content-between px-3 p-2 align-items-center">
+                <h2 class="text-right ml-2">ثبت نام</h2>
+                <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-danger p-2"><i
+                        class="fab fa-google h3 align-middle m-0 ml-2"></i>ثبت نام با گوگل</a>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="text-right">
+                    {{ form|crispy }}
+                </div>
+                <div class="row justify-content-between bg-light p-3 align-items-center">
+                    <button class="btn btn-primary col-3" type="submit">ثبت نام</button>
+                    <a class="mt-2 mt-sm-0" href="{% url 'login' %}">قبلا ثبت نام کرده اید؟ اینجا کلیک کنید</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

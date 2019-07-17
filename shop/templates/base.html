@@ -15,35 +15,31 @@
     <link href="{% static 'libraries/font-awesome/css/all.min.css' %}" rel="stylesheet">
     <link href="{% static 'libraries/vue/vue-select.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
-    <script src="{% static 'libraries/vue/vue.min.js' %}"></script>
-    <script src="{% static 'libraries/vue/vuex.min.js' %}"></script>
-    <script src="{% static 'libraries/vue/vue-select.js' %}"></script>
-    <script src="{% static 'libraries/vue/vue-resource.js' %}"></script>
-    <script src="{% static 'libraries/js.cookie.min.js' %}"></script>
-    <script src="{% static 'libraries/ifvisible.min.js' %}"></script>
+    {% comment %} <script src="{% static 'chunk-vendors.5b30af39.js' %}"></script> {% endcomment %}
 </head>
 
 <body>
     <div id="app" class="container-fluid p-0">
         {% block header %}
+        <vue-topprogress ref="topProgress"></vue-topprogress>
         <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
             <div class="d-flex order-0">
-                <span class="text-dark h3 m-0 py-1 px-2"><a class="text-danger" href="">با صرفه تر</a></span>
+                <span class="text-dark h3 m-0 py-1 px-2"><router-link class="text-dark" to="/">با صرفه تر</router-link></span>
             </div>
-            <div class="search order-2 order-lg-1 position-relative col-12 col-lg-8 mt-3 mt-lg-0 p-0 d-flex">
+            <form @submit.prevent="search(search_term)" class="search order-2 order-lg-1 position-relative col-12 col-lg-8 mt-3 mt-lg-0 p-0 d-flex">
                 <div class="position-relative w-100 d-flex">
-                    <input autofocus type="search" v-model="search_term" @input="search(search_term)"
+                    <input type="search" v-model="search_term" @input="search(search_term)"
                         placeholder="جستجو ..." name="s" id="search" class="border px-4 py-2 w-100 h-100">
                     <input type="button" value="جستجو" @click="search(search_term)"
                         class="bg-warning border search-btn px-3 h-100">
                 </div>
-            </div>
+            </form>
             <div class="icons d-flex order-1 order-lg-2">
                 {% if user.is_authenticated %}
                 <a href="{% url 'logout' %}" class="text-dark" title="خروج از حساب کاربری"><i class="fas fa-sign-out"
                         style="font-size:2.15rem;"></i></a>
-                <a href="{% url 'manage_account' %}" class="text-dark" title="مدیریت حساب کاربری"><i class="fas fa-user-circle"
-                        style="font-size:2.15rem;"></i></a>
+                <router-link to="{% url 'manage_account' %}" class="text-dark" title="مدیریت حساب کاربری"><i class="fas fa-user-circle"
+                        style="font-size:2.15rem;"></i></router-link>
                 {% url 'login' as the_url %}      
                 {% with "http://localhost:8000"|add:the_url as ref %}
                     {% if request.META.HTTP_REFERER == ref %}
@@ -51,12 +47,12 @@
                     {% endif %} 
                 {% endwith %}  
                 {% else %}
-                <a href="{% url 'signup' %}" class="text-dark" title="ثبت نام"><i class="fas fa-user-plus"></i></a>
-                <a href="{% url 'login' %}" class="text-dark" title="ورود به حساب کاربری"><i class="fas fa-user-circle"
-                        style="font-size:2.15rem;"></i></a>
+                <router-link to="{% url 'signup' %}" class="text-dark" title="ثبت نام"><i class="fas fa-user-plus"></i></router-link>
+                <router-link to="{% url 'login' %}" class="text-dark" title="ورود به حساب کاربری"><i class="fas fa-user-circle"
+                        style="font-size:2.15rem;"></i></router-link>
                 {% endif %}
-                <a href="{% url 'cart_page' %}" class="text-dark" title="سبد خرید"><i
-                        class="fas fa-shopping-cart"></i></a>
+                <router-link to="{% url 'cart_page' %}" class="text-dark"><i
+                        class="fas fa-shopping-cart" title="سبد خرید"></i></router-link>
             </div>
         </div>
         <div class="d-flex cat-header justify-content-center p-0 py-2">
@@ -72,68 +68,19 @@
                 </div>
             </div>
         </div>
-
-        <div class="cards-container d-flex flex-row-reverse">
+        <div>
             <!-- sub categories -->
-            <transition name="slide">
-                <div v-if="product_type[0]" class="product-type">
-                    <a href="/products/category/لبنیات">لبنیات</a>
-                    <a href="/products/category/سبزیجات">سبزیجات</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[1]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('سیب زمینی و پیاز')">سیب زمینی و پیاز</a>
-                    <a href="#" @click="shw_products_by_category('میوه جات')">میوه جات</a>
-                    <a href="#" @click="shw_products_by_category('ماکارانی')">ماکارانی</a>
-                    <a href="#" @click="shw_products_by_category('رب')">رب</a>
-                    <a href="#" @click="shw_products_by_category('خرما')">خرما</a>
-                    <a href="#" @click="shw_products_by_category('گردو')">گردو</a>
-                    <a href="#" @click="shw_products_by_category('زیتون')">زیتون</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[2]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('روغن')">روغن</a>
-                    <a href="#" @click="shw_products_by_category('برنج')">برنج</a>
-                    <a href="#" @click="shw_products_by_category('چای')">چای</a>
-                    <a href="#" @click="shw_products_by_category('قند')">قند</a>
-                    <a href="#" @click="shw_products_by_category('شکر')">شکر</a>
-                    <a href="#" @click="shw_products_by_category('زعفران')">زعفران</a>
-                    <a href="#" @click="shw_products_by_category('آبغوره')">آبغوره</a>
-                    <a href="#" @click="shw_products_by_category('آبلیمو')">آبلیمو</a>
-                    <a href="#" @click="shw_products_by_category('سرکه')">سرکه</a>
-                    <a href="#" @click="shw_products_by_category('دستمال کاغذی')">دستمال کاغذی</a>
-                    <a href="#" @click="shw_products_by_category('پودر لباسشویی')">پودر لباسشویی</a>
-                    <a href="#" @click="shw_products_by_category('صابون')">صابون</a>
-                    <a href="#" @click="shw_products_by_category('مایع ظرفشویی')">مایع ظرفشویی</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[3]" class="product-type">
-                    <a href="#" @click="shw_products_by_category('لوازم التحریر')">لوازم التحریر</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[4]" class="product-type">
-                    <a href="/products/category/لوازم-دیجیتال">لوازم دیجیتال</a>
-                </div>
-            </transition>
-            <transition name="slide">
-                <div v-if="product_type[5]" class="product-type">
-                    <a href="/products/category/لوازم-خانگی">لوازم خانگی</a>
-                </div>
-            </transition>
+            <subcategories></subcategories>
             {% endblock header %}
             {% block content %}
             {% endblock content %}
         </div>
-        <div v-if="shw_overlay" class="overlay" @click="hide_product_type()"></div>
+        <div v-if="$store.state.shw_overlay" class="overlay" @click="hide_product_type()"></div>
         <!-- messages -->
-<message :msg="store.state.msg_txt" :msgtype="store.state.msg_type"></message>
+<message :msg="$store.state.msg_text" :msgtype="$store.state.msg_type" />
     </div>
-    <script src="{% static 'js/cities.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+    {% comment %} <script src="{% static 'app.15b12975.js' %}"></script> {% endcomment %}
+    <script src="http://localhost:8080/app.js"></script>
 </body>
 
 </html>

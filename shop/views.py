@@ -26,6 +26,8 @@ def index(request):
     # context = {'products': products,}
     if not request.session.session_key:
         request.session.save()    
+    if request.is_ajax():
+        return render(request, 'index-ajax.html')    
     return render(request, 'index.html')
 
 def product_cat(request, cat):
@@ -171,8 +173,9 @@ def cart_page(request):
     if request.method == 'POST':
         return HttpResponse(json.dumps(c_data))
     if request.method == 'GET':
+        if request.is_ajax():
+            return render(request, 'cart-ajax.html', context)
         return render(request, 'cart.html', context)
-
 @csrf_exempt
 def submit_order(request):
     user_id = request.user.id
@@ -219,7 +222,10 @@ def update_customer_info(request):
 class signup(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    def get(self, request):
+        if self.request.is_ajax():
+            return render(request, 'signup_ajax.html', {'form': self.form_class})      
+        return render(request, 'signup.html', {'form': self.form_class})
 
 def manage_account(request):
     user_id = request.user.id
@@ -237,4 +243,6 @@ def manage_account(request):
             form = CustomerForm(request.POST)
             if form.is_valid:
                 form.save()
+    if request.is_ajax():  
+        return render(request, 'manage_account_ajax.html', {'form': form})          
     return render(request, 'manage_account.html', {'form': form})
