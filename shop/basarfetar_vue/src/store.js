@@ -70,6 +70,9 @@ export default new Vuex.Store({
     reset_base_cart_amounts(state) {
       state.base_cart_amounts = state.cart_amounts.slice();
     },
+    clear_base_cart_amounts(state) {
+      state.base_cart_amounts = [];
+    },
     set_msg_text(state, payload) {
       state.msg_text = payload;
     },

@@ -8,7 +8,6 @@ import vueTopprogress from 'vue-top-progress'
 import Message from '@/components/Message.vue';
 import productdetailesbox from '@/components/ProductDetailesBox.vue';
 import productcard from '@/components/ProductCard.vue';
-import carttable from '@/components/CartTable.vue';
 import pagination from '@/components/Pagination.vue';
 import subcategories from '@/components/SubCategories.vue';
 
@@ -32,43 +31,6 @@ String.prototype.toPersianDigits = function () {
 }
 
 Vue.mixin({
-  data() {
-    return {
-      provinces: [
-        "آذربایجان‌شرقی",
-        "آذربایجان‌غربی",
-        "اردبیل",
-        "اصفهان",
-        "البرز",
-        "ایلام",
-        "بوشهر",
-        "تهران",
-        "چهارمحال‌و‌بختیاری",
-        "خراسان‌جنوبی",
-        "خراسان‌رضوی",
-        "خراسان‌شمالی",
-        "خوزستان",
-        "زنجان",
-        "سمنان",
-        "سیستان‌و‌بلوچستان",
-        "فارس",
-        "قزوین",
-        "قم",
-        "كردستان",
-        "كرمان ",
-        "كرمانشاه",
-        "کهگیلویه‌و‌بویراحمد",
-        "گلستان",
-        "گیلان",
-        "لرستان",
-        "مازندران",
-        "مركزی",
-        "هرمزگان",
-        "همدان",
-        "یزد",
-      ],
-    }
-  },
   methods: {
     to_fa(num, dontTrim) {
       var i = 0,
@@ -103,19 +65,6 @@ Vue.mixin({
     trimbr(str) {
       return str.replace(/^\s+|\s+$/g, '');
     },
-    update_cart(shw_msg) {
-      var amounts = store.state.cart_amounts;
-      return this.$http.get('/update_cart?cart_amounts=' + amounts).then(response => {
-        if (shw_msg) {
-          this.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'alert-success');
-        }
-        store.commit('reset_base_cart_amounts');
-        this.disabled = true;
-      }, response => {
-        this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
-        console.log(response.status);
-      });
-    },
     hide_product_type() {
       for (var i = 0; i < store.state.product_type.length; i++) {
         store.commit('set_product_type', {'index': i, 'status': false});
@@ -128,7 +77,7 @@ Vue.mixin({
 new Vue({
   router: router,
   store,
-  components: {Message, productcard, productdetailesbox, carttable, pagination, subcategories},
+  components: {Message, productcard, productdetailesbox, pagination, subcategories},
   delimiters: ['[[', ']]'],
   data: {
     shw_use_period: true,
@@ -136,8 +85,6 @@ new Vue({
     cat_header_height: 0,
     search_term: '',
     updated_cart_data: '',
-    disabled: true,
-    order_disabled: false,
     cart_amounts: [],
     shw_products: false,
     shw_api_results: false,
@@ -234,11 +181,6 @@ new Vue({
           console.log(response.status);
         });
       }
-    },
-    async submit_order() {
-      this.order_disabled = true;
-      await this.update_cart(false);
-      this.set_msg('سفارش شما با موفقیت ثبت شد.', 'alert-success');
     },
   },
 }).$mount('#app')

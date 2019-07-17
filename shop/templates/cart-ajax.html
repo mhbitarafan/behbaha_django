@@ -1,15 +1,6 @@
 {% load crispy_forms_tags %}
-<div class="noside-container py-3 bg-dark d-flex w-100 justify-content-center" :style="$store.state.cart_container_height">
-    <div class="d-flex flex-column col-12 bg-white col-lg-10 align-items-center p-2 shadow">
-        <div class="row justify-content-center w-100">
             {% if c_data != '' %}
-            <form method="POST" action="{% url 'submit_order' %}" class="row justify-content-center text-right col-12"
-                ref="order_form" @submit="submit_order()">
                 {% csrf_token %}
-                <div class="d-flex flex-row w-100 justify-content-center">
-                    <h2 class="text-right mt-2 col-12 p-2 text-danger">سبد خرید</h2>
-                </div>
-                <carttable c_data="{{c_data}}"></carttable>
                 <div class="row justify-content-center mt-4 w-100" dir="rtl">
                     <h3 class="text-right col-12 mb-4 p-0">اطلاعات سفارش</h3>
                     <div class="form-row">
@@ -52,12 +43,9 @@
                     <div class="row col-12 rounded justify-content-between bg-light p-3 align-items-center">
                         <button class="btn btn-success" type="submit" :disabled="order_disabled">ثبت سفارش</button>
                     </div>
-            </form>
+
         </div>
         {% else %}
         <h3 class="mt-5 text-danger text-right col-12 w-100 text-center">!سبد خرید شما خالی می باشد</h3>
         <img src="https://cdn.dribbble.com/users/887568/screenshots/3172047/ufo.gif" alt="cart is empty">
         {% endif %}
-    </div>
-</div>
-</div>

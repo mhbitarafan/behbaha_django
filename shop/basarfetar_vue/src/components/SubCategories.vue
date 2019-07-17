@@ -2,51 +2,51 @@
   <div>
     <transition name="slide">
       <div v-show="$store.state.product_type[0]" class="product-type">
-        <a href="/products/category/لبنیات">لبنیات</a>
-        <a href="/products/category/سبزیجات">سبزیجات</a>
+        <router-link to="/products/category/لبنیات">لبنیات</router-link>
+        <router-link to="/products/category/سبزیجات">سبزیجات</router-link>
       </div>
     </transition>
     <transition name="slide">
       <div v-show="$store.state.product_type[1]" class="product-type">
-        <a href="#" @click="shw_products_by_category('سیب زمینی و پیاز')">سیب زمینی و پیاز</a>
-        <a href="#" @click="shw_products_by_category('میوه جات')">میوه جات</a>
-        <a href="#" @click="shw_products_by_category('ماکارانی')">ماکارانی</a>
-        <a href="#" @click="shw_products_by_category('رب')">رب</a>
-        <a href="#" @click="shw_products_by_category('خرما')">خرما</a>
-        <a href="#" @click="shw_products_by_category('گردو')">گردو</a>
-        <a href="#" @click="shw_products_by_category('زیتون')">زیتون</a>
+        <router-link to="/products/category/سیب-زمینی-و-پیاز">سیب زمینی و پیاز</router-link>
+        <router-link to="/products/category/میوه-جات">میوه جات</router-link>
+        <router-link to="/products/category/ماکارانی">ماکارانی</router-link>
+        <router-link to="/products/category/رب">رب</router-link>
+        <router-link to="/products/category/خرما">خرما</router-link>
+        <router-link to="/products/category/گردو">گردو</router-link>
+        <router-link to="/products/category/زیتون">زیتون</router-link>
       </div>
     </transition>
     <transition name="slide">
       <div v-show="$store.state.product_type[2]" class="product-type">
-        <a href="#" @click="shw_products_by_category('روغن')">روغن</a>
-        <a href="#" @click="shw_products_by_category('برنج')">برنج</a>
-        <a href="#" @click="shw_products_by_category('چای')">چای</a>
-        <a href="#" @click="shw_products_by_category('قند')">قند</a>
-        <a href="#" @click="shw_products_by_category('شکر')">شکر</a>
-        <a href="#" @click="shw_products_by_category('زعفران')">زعفران</a>
-        <a href="#" @click="shw_products_by_category('آبغوره')">آبغوره</a>
-        <a href="#" @click="shw_products_by_category('آبلیمو')">آبلیمو</a>
-        <a href="#" @click="shw_products_by_category('سرکه')">سرکه</a>
-        <a href="#" @click="shw_products_by_category('دستمال کاغذی')">دستمال کاغذی</a>
-        <a href="#" @click="shw_products_by_category('پودر لباسشویی')">پودر لباسشویی</a>
-        <a href="#" @click="shw_products_by_category('صابون')">صابون</a>
-        <a href="#" @click="shw_products_by_category('مایع ظرفشویی')">مایع ظرفشویی</a>
+        <router-link to="/products/category/روغن">روغن</router-link>
+        <router-link to="/products/category/برنج">برنج</router-link>
+        <router-link to="/products/category/چای">چای</router-link>
+        <router-link to="/products/category/قند">قند</router-link>
+        <router-link to="/products/category/شکر">شکر</router-link>
+        <router-link to="/products/category/زعفران">زعفران</router-link>
+        <router-link to="/products/category/آبغوره">آبغوره</router-link>
+        <router-link to="/products/category/آبلیمو">آبلیمو</router-link>
+        <router-link to="/products/category/سرکه">سرکه</router-link>
+        <router-link to="/products/category/دستمال کاغذی">دستمال کاغذی</router-link>
+        <router-link to="/products/category/پودر لباسشویی">پودر لباسشویی</router-link>
+        <router-link to="/products/category/صابون">صابون</router-link>
+        <router-link to="/products/category/مایع ظرفشویی">مایع ظرفشویی</router-link>
       </div>
     </transition>
     <transition name="slide">
       <div v-show="$store.state.product_type[3]" class="product-type">
-        <a href="#" @click="shw_products_by_category('لوازم التحریر')">لوازم التحریر</a>
+        <router-link to="/products/category/لوازم-التحریر">لوازم التحریر</router-link>
       </div>
     </transition>
     <transition name="slide">
       <div v-show="$store.state.product_type[4]" class="product-type">
-        <a href="/products/category/لوازم-دیجیتال">لوازم دیجیتال</a>
+        <router-link to="/products/category/لوازم-دیجیتال">لوازم دیجیتال</router-link>
       </div>
     </transition>
     <transition name="slide">
       <div v-show="$store.state.product_type[5]" class="product-type">
-        <a href="/products/category/لوازم-خانگی">لوازم خانگی</a>
+        <router-link to="/products/category/لوازم-خانگی">لوازم خانگی</router-link>
       </div>
     </transition>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <table class="my-2 col-12 table cart-table">
+  <table v-if="$store.state.base_cart_amounts.length != 0" class="my-2 col-12 table cart-table">
     <input type="hidden" name="title" v-model="$store.state.cart_titles" />
     <input type="hidden" name="amount" v-model="$store.state.cart_amounts" />
     <thead>
@@ -57,12 +57,9 @@
   </table>
 </template>
 <script>
-import ifvisible from 'ifvisible'
+import ifvisible from "ifvisible";
 export default {
   name: "carttable",
-  props: {
-    c_data: String
-  },
   data() {
     return {
       cart_data: "",
@@ -71,38 +68,63 @@ export default {
     };
   },
   mounted() {
-    this.save_cart_data(this.c_data);
-    ifvisible.on("focus", this.get_cart_data);
+    this.get_cart_data();
+    ifvisible.on("focus", this.check_cart_data);
   },
   methods: {
-    save_cart_data(cart_data) {
-      var cart_items = cart_data.replace(/'/g, '"');
-      cart_items = JSON.parse(cart_items);
-      this.cart_data = cart_items;
-      for (var i = 0; i < cart_items.length; i++) {
-        this.$store.commit("set_cart_titles", {
-          id: i,
-          value: cart_items[i].title
-        });
-        this.$store.commit("set_base_cart_amounts", {
-          id: i,
-          value: cart_items[i].amount.toPersianDigits()
-        });
-        this.$store.commit("set_cart_amounts", {
-          id: i,
-          value: cart_items[i].amount.toPersianDigits()
-        });
-        var num = parseInt(
-          this.cart_data[i].price_all.replace(/,/g, "").toEnglishDigits()
-        );
-        this.cart_sum += num;
-      }
+    update_cart(shw_msg) {
+      var amounts = this.$store.state.cart_amounts;
+      return this.$http.get('/update_cart?cart_amounts=' + amounts).then(response => {
+        if (shw_msg) {
+          this.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'alert-success');
+        }
+        this.$store.commit('reset_base_cart_amounts');
+        this.disabled = true;
+      }, response => {
+        this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
+        console.log(response.status);
+      });
     },
     get_cart_data() {
+      this.$root.$refs.topProgress.start();
+      this.$store.commit('clear_base_cart_amounts');
+      this.$http.post("/cart/").then(
+        response => {
+          this.$root.$refs.topProgress.done();
+          var cart_items = response.body;
+            this.cart_sum = 0;
+            this.cart_data = cart_items;
+            for (var i = 0; i < cart_items.length; i++) {
+              this.$store.commit("set_cart_titles", {
+                id: i,
+                value: cart_items[i].title
+              });
+              this.$store.commit("set_base_cart_amounts", {
+                id: i,
+                value: cart_items[i].amount.toPersianDigits()
+              });
+              this.$store.commit("set_cart_amounts", {
+                id: i,
+                value: cart_items[i].amount.toPersianDigits()
+              });
+              var num =
+                parseInt(
+                  this.cart_data[i].price.replace(/,/g, "").toEnglishDigits()
+                ) * this.$store.state.cart_amounts[i].toEnglishDigits();
+              this.cart_sum += num;
+            }
+        },
+        response => {
+          this.$root.$refs.topProgress.fail();
+        }
+      );
+    },
+    check_cart_data() {
       this.$http.post("/cart/").then(
         response => {
           var cart_items = response.body;
           if (this.is_cart_changed_web(cart_items)) {
+            this.$store.commit('clear_base_cart_amounts');
             this.cart_sum = 0;
             this.cart_data = cart_items;
             for (var i = 0; i < cart_items.length; i++) {
@@ -127,7 +149,6 @@ export default {
           }
         },
         response => {
-          // error callback
         }
       );
     },

@@ -4,6 +4,7 @@ import cart from './views/Cart.vue'
 import home from './views/Home.vue'
 import accountmanage from './views/AccountManage.vue'
 import signup from './views/signup.vue'
+import login from './views/Login.vue'
 
 Vue.use(Router)
 
@@ -14,6 +15,11 @@ export default new Router({
     {
       path: '/',
       name: 'home',
+      component: home
+    },
+    {
+      path: '/products/category/:cat',
+      name: 'category',
       component: home
     },
     {
@@ -30,6 +36,11 @@ export default new Router({
       path: '/account/signup/',
       name: 'signup',
       component: signup
+    },
+    {
+      path: '/account/login/',
+      name: 'login',
+      component: login
     },
   ]
 })

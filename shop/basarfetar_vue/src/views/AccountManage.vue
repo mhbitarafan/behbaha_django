@@ -1,6 +1,5 @@
 <template>
-<div v-html="account_manage_page">
-</div>
+<div v-html="account_manage_page" class="noside-container py-3 d-flex w-100 justify-content-center" :style="$store.state.cart_container_height"></div>
 </template>
 
 <script>

@@ -70,6 +70,12 @@ export default {
   components: {productcard, productdetailesbox},
   data() {
       return {
+        provinces: ["آذربایجان‌شرقی", "آذربایجان‌غربی", "اردبیل", "اصفهان", "البرز",
+                "ایلام", "بوشهر", "تهران", "چهارمحال‌و‌بختیاری", "خراسان‌جنوبی",
+                "خراسان‌رضوی", "خراسان‌شمالی", "خوزستان", "زنجان", "سمنان", 
+                "سیستان‌و‌بلوچستان", "فارس", "قزوین", "قم", "كردستان", "كرمان ", "كرمانشاه", 
+                "کهگیلویه‌و‌بویراحمد", "گلستان", "گیلان", "لرستان", "مازندران", "مركزی",       
+                "هرمزگان", "همدان", "یزد"],
         selected_city: 'تهران',
         min_price: '',
         max_price: '',
@@ -77,16 +83,27 @@ export default {
       }
   },
   mounted() {
-    var cat = location.href.substring(location.href.lastIndexOf('/') + 1).replace(/#/g, '').replace(/-/g, ' ');
-        if (cat == '') {
+    var cat = this.$route.params.cat;
+        if (cat == undefined) {
             this.shw_products_all();
         } else {
             this.shw_products_by_category(cat);
     }
   },
+  watch:{
+    '$route' (to, from) {
+        var cat = this.$route.params.cat;
+        if (cat == undefined) {
+            this.shw_products_all();
+        } else {
+            this.shw_products_by_category(cat);
+    }
+    }
+} ,
   methods: {
     shw_products_all() {
       this.$root.$refs.topProgress.start();
+      this.products = [];
       this.$root.shw_products = true;
       this.$store.commit('set_overlay', false);
       this.hide_product_type();
@@ -108,17 +125,18 @@ export default {
           this.$root.next_disabled = true;
         }
       }, response => {
-        this.$root.$refs.topProgress.fail()
+        this.$root.$refs.topProgress.fail();
         this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
         console.log(response);
       });
     },
     shw_products_by_category(t) {
       this.$root.$refs.topProgress.start();
+      this.products = [];
       this.$root.shw_products = true;
       this.$store.commit('set_overlay', false);
       this.hide_product_type();
-      var api_url = '/api/products/?category=' + t;
+      var api_url = '/api/products/?category=' + t.replace('-', ' ');
       this.$http.get(api_url).then(response => {
         this.$root.$refs.topProgress.done();
         this.$root.shw_api_results = false;
