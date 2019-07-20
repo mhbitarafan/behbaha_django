@@ -1,6 +1,5 @@
-import Vue from 'vue/dist/vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -23,10 +22,17 @@ export default new Vuex.Store({
     search_products: [],
     cards_container_height: '',
     cart_container_height: '',
+    active: [],
   },
   mutations: {
     set_overlay2(state, payload) {
       state.shw_overlay2 = payload.status;
+    },
+    set_active(state, payload) {
+      Vue.set(state.active, payload.id, payload.status);
+    },
+    clear_active(state) {
+      state.active = [];
     },
     set_overlay(state, payload) {
       state.shw_overlay = payload;
@@ -45,6 +51,9 @@ export default new Vuex.Store({
     },
     set_product_type(state, payload) {
       Vue.set(state.product_type, payload.index, payload.status);
+    },
+    clear_product_type(state) {
+      state.product_type = [];
     },
     set_details_box(state, payload) {
       Vue.set(state.sh_details_box, payload.id, payload.status);
@@ -70,8 +79,10 @@ export default new Vuex.Store({
     reset_base_cart_amounts(state) {
       state.base_cart_amounts = state.cart_amounts.slice();
     },
-    clear_base_cart_amounts(state) {
+    clear_cart(state) {
       state.base_cart_amounts = [];
+      state.cart_titles = [];
+      state.cart_amounts = [];
     },
     set_msg_text(state, payload) {
       state.msg_text = payload;
@@ -93,6 +104,28 @@ export default new Vuex.Store({
     },
   },
   actions: {
-
+    set_product_type_active({commit}, payload) {
+      return new Promise((resolve, reject) => {
+        commit('clear_active');
+        commit('clear_product_type');
+        commit('set_product_type', {'index': payload.index, 'status': payload.status});
+        commit('set_active', {'id': payload.index, 'status': payload.status})
+        resolve()
+      })
+    },
+    set_product_type({commit}, payload) {
+      return new Promise((resolve, reject) => {
+        commit('set_product_type', {'index': payload.index, 'status': payload.status});
+        resolve()
+      })
+    },
+    set_active({commit}, payload) {
+      return new Promise((resolve, reject) => {
+        commit('clear_active');
+        commit('set_product_type', {'index': payload.id, 'status': payload.status});
+        commit('set_active', {'id': payload.id, 'status': payload.status});
+        resolve()
+      })
+    },
   }
 })

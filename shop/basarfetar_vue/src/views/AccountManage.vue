@@ -17,7 +17,7 @@ export default {
         this.account_manage_page = response.body;
       }, response => {
           this.$root.$refs.topProgress.fail()
-          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
+          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'error');
       });
   },
 }

@@ -1,10 +1,6 @@
 <template>
   <transition name="fade-slideup">
-    <div
-      v-if="$store.state.shw_alert"
-      :class="$store.state.msg_type"
-      class="msg-box alert fixed-bottom text-right m-0 m-lg-2 p-2"
-    >{{$store.state.msg_text}}</div>
+    <a-alert v-if="$store.state.shw_alert" :message="$store.state.msg_text" :type="$store.state.msg_type" class="msg-box position-fixed text-right"/>
   </transition>
 </template>
 <script>

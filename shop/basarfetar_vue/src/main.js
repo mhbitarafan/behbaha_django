@@ -1,21 +1,26 @@
-import Vue from 'vue/dist/vue'
-import router from './router'
-import store from './store'
-import vSelect from 'vue-select'
-import VueResource from 'vue-resource'
-import Router from 'vue-router'
-import vueTopprogress from 'vue-top-progress'
 import Message from '@/components/Message.vue';
-import productdetailesbox from '@/components/ProductDetailesBox.vue';
-import productcard from '@/components/ProductCard.vue';
 import pagination from '@/components/Pagination.vue';
+import productcard from '@/components/ProductCard.vue';
+import productdetailesbox from '@/components/ProductDetailesBox.vue';
 import subcategories from '@/components/SubCategories.vue';
+import Vue from 'vue';
+import VueResource from 'vue-resource';
+import Router from 'vue-router';
+import vSelect from 'vue-select';
+import vueTopprogress from 'vue-top-progress';
+import router from './router';
+import store from './store';
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+import anime from 'animejs/lib/anime.es.js';
+import { includes } from 'lodash-es';
 
-Vue.use(Router);
-Vue.use(VueResource);
+Vue.use(Antd)
+Vue.use(Router)
+Vue.use(VueResource)
 Vue.use(vueTopprogress)
-Vue.component('v-select', vSelect);
-Vue.config.productionTip = false;
+Vue.component('v-select', vSelect)
+Vue.config.productionTip = false
 
 String.prototype.toEnglishDigits = function () {
   return this.replace(/[۰-۹]/g, function (w) {
@@ -66,17 +71,26 @@ Vue.mixin({
       return str.replace(/^\s+|\s+$/g, '');
     },
     hide_product_type() {
-      for (var i = 0; i < store.state.product_type.length; i++) {
-        store.commit('set_product_type', {'index': i, 'status': false});
-      }
       store.commit('set_overlay', false);
+      store.commit("clear_active");
+      anime({
+        targets: '.product-type',
+        translateY: '-105%',
+        easing: 'easeOutCirc',
+        duration: 800,
+        complete: function(){
+          store.commit("clear_product_type");
+        }
+      });
+
     },
   }
 });
 
 new Vue({
-  router: router,
+  router,
   store,
+  el: '#app',
   components: {Message, productcard, productdetailesbox, pagination, subcategories},
   delimiters: ['[[', ']]'],
   data: {
@@ -106,16 +120,25 @@ new Vue({
       store.commit('set_cart_container_height', {minHeight: b});
     },
     shw_product_type(index) {
-      if (store.state.product_type[index] == true) {
-        store.commit('set_product_type', {'index': index, 'status': false});
-        store.commit('set_overlay', false);
-        return false;
-      }
-      for (var i = 0; i < store.state.product_type.length; i++) {
-        store.commit('set_product_type', {'index': i, 'status': false})
-      }
+      anime.remove('.product-type');
       store.commit('set_overlay', true);
-      store.commit('set_product_type', {'index': index, 'status': true});
+      if (!includes(store.state.active, true)){
+        store.dispatch('set_product_type_active', {'index': index, 'status': true}).then(() => {
+            anime({
+              targets: '.product-type.active',
+              translateY: ['-100%' , '0%'],
+              easing: 'easeOutCirc'
+            });
+        });
+      } else {
+        store.commit('clear_product_type')
+        var el = document.querySelector('#s' + index);
+        store.dispatch('set_active', {'id': index, 'status': true}).then(() => {
+          anime.set(el, {
+            translateY: 0,
+          });
+        });
+      }
     },
     search(s) {
       store.commit('clear_search_products');
@@ -137,13 +160,13 @@ new Vue({
               store.commit('set_search_products', {'index': i, 'search_product': results[i]});
             }
           } else {
-            this.set_msg("نتیجه ای یافت نشد", 'alert-danger');
+            this.set_msg("نتیجه ای یافت نشد", 'error');
           }
           if (this.next_page == null) {
             this.next_disabled = true;
           }
         }, response => {
-          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
+          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'error');
           console.log(response.status);
         });
       } else {
@@ -177,10 +200,10 @@ new Vue({
             this.next_disabled = true;
           }
         }, response => {
-          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
+          this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'error');
           console.log(response.status);
         });
       }
     },
   },
-}).$mount('#app')
+})

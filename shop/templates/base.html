@@ -19,22 +19,21 @@
 </head>
 
 <body>
-    <div id="app" class="container-fluid p-0">
+    <div id="app">
+    <a-layout class="bg-white">
         {% block header %}
         <vue-topprogress ref="topProgress"></vue-topprogress>
-        <div id="header" class="row justify-content-between p-2 m-0" @mouseover="hide_product_type()">
-            <div class="d-flex order-0">
-                <span class="text-dark h3 m-0 py-1 px-2"><router-link class="text-dark" to="/">با صرفه تر</router-link></span>
-            </div>
-            <form @submit.prevent="search(search_term)" class="search order-2 order-lg-1 position-relative col-12 col-lg-8 mt-3 mt-lg-0 p-0 d-flex">
-                <div class="position-relative w-100 d-flex">
-                    <input type="search" v-model="search_term" @input="search(search_term)"
-                        placeholder="جستجو ..." name="s" id="search" class="border px-4 py-2 w-100 h-100">
-                    <input type="button" value="جستجو" @click="search(search_term)"
-                        class="bg-warning border search-btn px-3 h-100">
-                </div>
-            </form>
-            <div class="icons d-flex order-1 order-lg-2">
+      <a-layout class="bg-white">
+        <a-layout-header id="header" class="p-0 d-flex justify-content-center" @mouseover="hide_product_type()">
+            <a-row type="flex" justify="space-between" align="middle" class="col-12 p-3 h-100 m-0">
+                <span class="h3 m-0 px-2 order-1 logo"><router-link class="text-dark align-middle" to="/">با صرفه تر</router-link></span>
+                <a-col class="position-relative col col-xl-6 search order-3 order-md-2"><form @submit.prevent="search(search_term)">
+                    <input type="search" class="rounded-pill align-top px-4 py-2 w-100" v-model="search_term" @input="search(search_term)"
+                    placeholder="جستجو ..." id="search" name="s">
+                    <div class="search-btn position-absolute bg-danger"><i class="fa fa-search align-top h4" aria-hidden="true"></i></div>
+                </form>
+                </a-col>
+                <a-col class="icons order-2 order-md-3">
                 {% if user.is_authenticated %}
                 <a href="{% url 'logout' %}" class="text-dark" title="خروج از حساب کاربری"><i class="fas fa-sign-out"
                         style="font-size:2.15rem;"></i></a>
@@ -53,22 +52,23 @@
                 {% endif %}
                 <router-link to="{% url 'cart_page' %}" class="text-dark"><i
                         class="fas fa-shopping-cart" title="سبد خرید"></i></router-link>
-            </div>
-        </div>
-        <div class="d-flex cat-header justify-content-center p-0 py-2">
+                </a-col>
+        </a-row>
+        </a-layout-header>
+        <div class="d-flex cat-header justify-content-center p-0">
             <div v-if="shw_use_period" class="cat-header-item col-auto row justify-content-center align-items-center m-0">
-                <span class="h5 my-2 col-12 text-center">دوره مصرف</span>
-                <div class="cat-buttons my-1 d-flex col-12" style="overflow:auto;">
-                    <div @click="shw_product_type(0)">دائم</div>
-                    <div @click="shw_product_type(1)">کوتاه مدت</div>
-                    <div @click="shw_product_type(2)">میان مدت</div>
-                    <div @click="shw_product_type(3)">بلند مدت</div>
-                    <div @click="shw_product_type(4)">طولانی مدت</div>
-                    <div @click="shw_product_type(5)">عمری</div>
-                </div>
+                <span class="h4 mt-2 mt-lg-1 ml-2 col-auto text-center">دوره مصرف</span>
+                    <div class="cat-buttons row my-1">
+                        <div @mouseover="shw_product_type(0)" :class="{'active': $store.state.active[0]}">دائم</div>
+                        <div @mouseover="shw_product_type(1)" :class="{'active': $store.state.active[1]}">کوتاه مدت</div>
+                        <div @mouseover="shw_product_type(2)" :class="{'active': $store.state.active[2]}">میان مدت</div>
+                        <div @mouseover="shw_product_type(3)" :class="{'active': $store.state.active[3]}">بلند مدت</div>
+                        <div @mouseover="shw_product_type(4)" :class="{'active': $store.state.active[4]}">طولانی مدت</div>
+                        <div @mouseover="shw_product_type(5)" :class="{'active': $store.state.active[5]}">عمری</div>
+                    </div>
             </div>
         </div>
-        <div class="position-relative">
+        <div class="position-relative" style="overflow:hidden;">
             <!-- sub categories -->
             <subcategories></subcategories>
             {% endblock header %}
@@ -78,6 +78,8 @@
         <div v-if="$store.state.shw_overlay" class="overlay" @click="hide_product_type()"></div>
         <!-- messages -->
 <message :msg="$store.state.msg_text" :msgtype="$store.state.msg_type" />
+</a-layout>
+</a-layout>
     </div>
     {% comment %} <script src="{% static 'app.15b12975.js' %}"></script> {% endcomment %}
     <script src="http://localhost:8080/app.js"></script>

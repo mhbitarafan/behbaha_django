@@ -1,9 +1,15 @@
 <template>
-  <div
-    class="card-box my-2 d-flex flex-column align-items-center"
-    @click="shw_product_details()"
-  >
-    <h1 class="card-box-title mb-0 p-2 px-3 w-100 text-right" :title="title">{{to_fa(title)}}</h1>
+  <a-card hoverable @click="shw_product_details()">
+    <div class="ant-card-head">
+      <div class="ant-card-head-wrapper">
+        <a-tooltip placement="topRight" >
+        <template slot="title">
+          <span>{{title}}</span>
+        </template>
+        <h5 class="ant-card-head-title text-danger">{{to_fa(title)}}</h5>
+      </a-tooltip>
+      </div>
+    </div>
     <div class="card-box-footer py-2 px-3 w-100 text-right">
       مهلت ثبت سفارش:
       {{to_fa(time_remaining)}}
@@ -37,11 +43,10 @@
         <div>{{to_fa(max_order)}} سفارش</div>
       </div>
     </div>
-  </div>
+  </a-card>
 </template>
 
 <script>
-
 export default {
   name: "productcard",
   props: {
@@ -53,47 +58,47 @@ export default {
     image: String,
     order_ranges: String,
     pid: Number,
-    ordered_num: Number,
+    ordered_num: Number
   },
-    methods: {
+  methods: {
     shw_product_details() {
-      this.$store.commit('set_overlay2', {
-        'status': true
+      this.$store.commit("set_overlay2", {
+        status: true
       });
-      this.$store.commit('set_details_box', {
-        'id': this.pid,
-        'status': true
+      this.$store.commit("set_details_box", {
+        id: this.pid,
+        status: true
       });
-      this.$store.commit('set_ordered_num', {
-        'id': this.pid,
-        'num': this.ordered_num
+      this.$store.commit("set_ordered_num", {
+        id: this.pid,
+        num: this.ordered_num
       });
       this.$store.commit("set_order_ranges", {
         id: this.pid,
         ranges: this.order_ranges
-    });
+      });
       var ordered_num = this.$store.state.ordered_num[this.pid];
       var order_ranges = this.$store.state.order_ranges[this.pid];
-      var order_ranges_arr = order_ranges.split('\n');
-      this.$store.commit('set_which_sold', '-1');
-      for (var i = order_ranges_arr.length; i--;) {
+      var order_ranges_arr = order_ranges.split("\n");
+      this.$store.commit("set_which_sold", "-1");
+      for (var i = order_ranges_arr.length; i--; ) {
         var order_range = order_ranges_arr[i].match(/^(\d+)\s*-\s*(\d+)/);
         var min = order_range[1];
         var max = order_range[2];
         if (max > ordered_num && ordered_num >= min) {
-          this.$store.commit('set_which_sold', i);
+          this.$store.commit("set_which_sold", i);
           return;
         }
       }
     },
     min_price(prices) {
-      var p = prices.split('\n');
+      var p = prices.split("\n");
       return Math.min(...p).toLocaleString();
     },
     max_price(prices) {
-      var p = prices.split('\n');
+      var p = prices.split("\n");
       return Math.max(...p).toLocaleString();
-    },
-  },
+    }
+  }
 };
 </script>

@@ -19,7 +19,7 @@
           <div class="d-flex flex-row cart-amount-input">
             <input
               type="text"
-              class="p-1"
+              class="p-1 border"
               @input="is_cart_changed($store.state.cart_amounts[index], index)"
               v-model="$store.state.cart_amounts[index]"
             />
@@ -76,18 +76,18 @@ export default {
       var amounts = this.$store.state.cart_amounts;
       return this.$http.get('/update_cart?cart_amounts=' + amounts).then(response => {
         if (shw_msg) {
-          this.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'alert-success');
+          this.set_msg('سبد خرید با موفقیت به روزرسانی شد', 'success');
         }
         this.$store.commit('reset_base_cart_amounts');
         this.disabled = true;
       }, response => {
-        this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'alert-danger');
+        this.set_msg('خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید', 'error');
         console.log(response.status);
       });
     },
     get_cart_data() {
       this.$root.$refs.topProgress.start();
-      this.$store.commit('clear_base_cart_amounts');
+      this.$store.commit('clear_cart');
       this.$http.post("/cart/").then(
         response => {
           this.$root.$refs.topProgress.done();
@@ -124,7 +124,7 @@ export default {
         response => {
           var cart_items = response.body;
           if (this.is_cart_changed_web(cart_items)) {
-            this.$store.commit('clear_base_cart_amounts');
+            this.$store.commit('clear_cart');
             this.cart_sum = 0;
             this.cart_data = cart_items;
             for (var i = 0; i < cart_items.length; i++) {

@@ -1,11 +1,10 @@
 <template>
-<transition name="fade">
-  <div v-if="$store.state.sh_details_box[pid]" style="z-index: 7;">
-  <div v-if="$store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()">
-  </div>
-  <div class="position-fixed close-btn" @click="hide_overlay2(pid)"><i class="fas fa-times"></i></div>
+<transition name="fade-zoom">
+  <div v-if="$store.state.sh_details_box[pid]" class="dt-container">
+  <!-- <div v-if="$store.state.shw_overlay2" class="overlay overlay2" @click="hide_overlay2(pid)" @mouseover="hide_product_type()"></div> -->
+  <div class="position-fixed close-btn" @click="hide_overlay2(pid)"><i class="fal fa-times"></i></div>
   <div v-if="$store.state.sh_details_box[pid]" class="product-details-box p-1 row flex-row-reverse" @mouseover="hide_product_type()">
-      <div class="dt-img d-flex flex-column col-12 col-lg-5 mt-5 mt-lg-0">
+      <div class="dt-img d-flex flex-column col-12 col-lg-5 mt-5">
         <img :src="['/media/' + image]">
         <div class="d-flex mt-2 mb-4 justify-content-center">
           <div>
@@ -19,7 +18,7 @@
         </div>
       </div>
       <div class="d-flex flex-column w-100 col-12 col-lg-7 mt-2">
-              <div class="dt-title text-dark w-100 text-right px-3 py-2">{{to_fa(title)}}</div>     
+              <div class="dt-title text-dark w-100 text-right px-3 py-2 mt-0 mt-lg-5">{{to_fa(title)}}</div>     
               <div class="card-box-footer py-2 px-3 w-100 text-right">مهلت ثبت سفارش:
                   {{to_fa(time_remaining)}}
               </div>
@@ -51,9 +50,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                  <tr :class="{'alert alert-success': time_remaining == 'به اتمام رسید' && index == $store.state.which_sold}" v-for="(item, index) in get_order_ranges(order_ranges)" :key="index">
+                  <tr :class="{'alert success': time_remaining == 'به اتمام رسید' && index == $store.state.which_sold}" v-for="(item, index) in get_order_ranges(order_ranges)" :key="index">
                       <td>{{to_fa(item)}}</td>
-                      <td :class="{'position-relative sold alert alert-success': time_remaining == 'به اتمام رسید' && index == $store.state.which_sold}">{{to_fa(get_prices(prices,index))}}</td>
+                      <td :class="{'position-relative sold alert success': time_remaining == 'به اتمام رسید' && index == $store.state.which_sold}">{{to_fa(get_prices(prices,index))}}</td>
                   </tr>
                   </tbody>
                 </table>
@@ -153,7 +152,7 @@ export default {
         this.title_msg = '';
       }
       this.$http.get('/add_to_cart/?title=' + title + '&order_amount=' + o_amount).then(response => {
-        this.set_msg("'" + o_amount + ' ' + title + "'" + ' به سبد خرید افزوده شد', 'alert-success');
+        this.set_msg("'" + o_amount + ' ' + title + "'" + ' به سبد خرید افزوده شد', 'success');
       }, response => {
         // error callback
       });

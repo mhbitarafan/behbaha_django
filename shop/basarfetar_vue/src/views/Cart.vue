@@ -44,7 +44,7 @@ export default {
     async submit_order() {
       this.order_disabled = true;
       await this.update_cart(false);
-      this.set_msg('سفارش شما با موفقیت ثبت شد.', 'alert-success');
+      this.set_msg('سفارش شما با موفقیت ثبت شد.', 'success');
     },
     load_page(){
         this.$http.get("/cart").then(
@@ -54,7 +54,7 @@ export default {
       response => {
         this.set_msg(
           "خطا! از اتصال اینترنت خود مطمئن شوید یا لحظاتی بعد مجددا امتحان کنید",
-          "alert-danger"
+          "error"
         );
       }
     );
