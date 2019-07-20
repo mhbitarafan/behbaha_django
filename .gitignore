@@ -1,17 +1,16 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Created by https://www.gitignore.io/api/visualstudiocode,windows,django,python
-# Edit at https://www.gitignore.io/?templates=visualstudiocode,windows,django,python
+# Created by https://www.gitignore.io/api/django,python,visualstudiocode,vuejs,windows,vue
+# Edit at https://www.gitignore.io/?templates=django,python,visualstudiocode,vuejs,windows,vue
 
 ### Django ###
 *.log
 *.pot
 *.pyc
 __pycache__/
+local_settings.py
 db.sqlite3
 media
-local_settings.py
-static
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -73,6 +72,7 @@ coverage.xml
 *.mo
 
 # Django stuff:
+db.sqlite3-journal
 
 # Flask stuff:
 instance/
@@ -100,7 +100,7 @@ ipython_config.py
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don’t work, or not
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
 #Pipfile.lock
 
@@ -173,7 +173,7 @@ dmypy.json
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don’t work, or not
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
 
 # celery beat schedule file
@@ -203,9 +203,28 @@ dmypy.json
 # Ignore all local history of files
 .history
 
+### Vue ###
+# gitignore template for Vue.js projects
+#
+# Recommended template: Node.gitignore
+
+# TODO: where does this rule come from?
+docs/_book
+
+# TODO: where does this rule come from?
+test/
+
+### Vuejs ###
+# Recommended template: Node.gitignore
+
+node_modules/
+npm-debug.log
+yarn-error.log
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
+Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
 
@@ -228,7 +247,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.gitignore.io/api/visualstudiocode,windows,django,python
+# End of https://www.gitignore.io/api/django,python,visualstudiocode,vuejs,windows,vue
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
